@@ -6,6 +6,8 @@ class AnalizadorSintactico;
 
 parser code{:
     formHoc5 frmInterfaz;
+    MaquinaHoc4 maquinaHoc4;
+
     public void report_error(String mensaje,Object info){
         StringBuilder m = new StringBuilder("Error");
         if(info instanceof java_cup.runtime.Symbol){
@@ -30,7 +32,7 @@ terminal SEMIC;
 terminal OpSuma, OpResta, OpProd, OpDiv, OpAsig, OpPotencia;
 terminal ParIzq, ParDer;
 terminal PRINT, WHILE, IF, ELSE;
-terminal Float NUM; /*SymbolHoc*/
+terminal SymbolHoc NUM;
 terminal SymbolHoc VAR;
 terminal SymbolHoc CONST_PRED; /* PI , E, PHI , RAD, etc*/
 terminal SymbolHoc BLTIN; /* sin,cos,atan,etc*/
@@ -38,7 +40,7 @@ terminal MENOSUNARIO;
 terminal OR, AND, GT, GE, LT, LE, EQ, NE, NOT;
 
 non terminal list;
-non terminal Float asgn, expr;/*Integer?*/
+non terminal Integer asgn, expr; /*Posición de la instrucción*/
 
 precedence right OpAsig;
 precedence left OR;
@@ -50,21 +52,40 @@ precedence left MENOSUNARIO, NOT;
 precedence right OpPotencia;
 
 list    ::=
-        | list stmt SEMIC   {:
-                                            frmInterfaz.txtResultSintactico.append(Float.toString(valExpr) + "\n");
-                                    :}
+        | list stmt SEMIC                   {:
+                                                InstrucPrograma ins1 =  new InstrucPrograma();
+                                                ins1.TipInstr = EnumTipoInstr.INSTRUC;
+                                                ins1.Instruc = EnumInstrMaq.PRINT;
+
+                                                InstrucPrograma ins2 =  new InstrucPrograma();
+                                                ins2.TipInstr = EnumTipoInstr.INSTRUC;
+                                                ins2.Instruc = EnumInstrMaq.STOP;
+
+                                                maquinaHoc4.code2(ins1,ins2);
+                                            :}
         ;
-asgn    ::= VAR:v OpAsig expr {:     InstrucPrograma ins1 =  new InstrucPrograma();
-                                ins1.TipInstr
-                                    :}
+asgn    ::= VAR:v OpAsig expr               {:  InstrucPrograma ins1 =  new InstrucPrograma();
+                                                ins1.TipInstr = EnumTipoInstr.INSTRUC;
+                                                ins1.Instruc = EnumInstrMaq.VARPUSH;
+
+                                                InstrucPrograma ins2 =  new InstrucPrograma();
+                                                ins2.TipInstr = EnumTipoInstr.SYMBOL;
+                                                ins2.Instruc = v;
+                                                
+                                                InstrucPrograma ins3 =  new InstrucPrograma();
+                                                ins3.TipInstr = EnumTipoInstr.INSTRUC;
+                                                ins3.Instruc = EnumInstrMaq.ASSIGN;
+
+                                                RESULT = maquinaHoc4.code3(ins1,ins2,ins3);
+                                            :}
         ;
 
 stmt    ::= asgn SEMIC 
-        | PRINT expr SEMIC
-        | while cond stmt end
-        | if cond stmt end
-        | if cond stmt ELSE stmt end
-        | LLAVE_IZQ list_stmt LLAVE_DER
+        |   PRINT expr SEMIC
+        |   while cond stmt end
+        |   if cond stmt end
+        |   if cond stmt ELSE stmt end
+        |   LLAVE_IZQ list_stmt LLAVE_DER
         ;
 
 cond    ::= ParIzq expr ParDer
@@ -73,17 +94,21 @@ cond    ::= ParIzq expr ParDer
 while   ::= WHILE                           {:  maquinaHoc4.code3(whilecode, STOP, STOP);
                                             }
         ;
+
 if      ::= IF                              {:  maquinaHoc4.code(ifcode);
                                                 maquinaHoc4.code(STOP, STOP, STOP);
                                             }
         ;
-end     ::=                                 {   maquianHoc4.code(STOP);
+
+end     ::=                                 {   maquinaHoc4.code(STOP);
                                             }
         ;
+
 stmtlist::= stmt
         | stmtlist stmt                     {   
                                             }
         ;
+
 expr    ::= NUM:n                           {:  InstrucPrograma ins1 =  new InstrucPrograma(); 
                                                 ins1.TipInstr = EnumTipoInstr.INSTRUC;
                                                 ins1.Instruc = EnumInstrMaq.CONSTPUSH;
@@ -97,7 +122,7 @@ expr    ::= NUM:n                           {:  InstrucPrograma ins1 =  new Inst
 
         |   VAR:v                           {:  InstrucPrograma ins1 =  new InstrucPrograma(); 
                                                 ins1.TipInstr = EnumTipoInstr.INSTRUC;
-                                                ins1.Instruc = EnumInstrMaq.CONSTPUSH;
+                                                ins1.Instruc = EnumInstrMaq.VARPUSH;
 
                                                 InstrucPrograma ins2 = new InstrucPrograma();
                                                 ins2.TipInstr = EnumTipoInstr.SYMBOL;
@@ -107,7 +132,7 @@ expr    ::= NUM:n                           {:  InstrucPrograma ins1 =  new Inst
                                                 ins3.TipInstr = EnumTipoInstr.INSTRUC;
                                                 ins3.Instruc = EnumInstrMaq.EVAL;
 
-                                                RESULT = maquinaHoc4.code3(ins1,ins2, ins3);
+                                                RESULT = maquinaHoc4.code3(ins1, ins2, ins3);
                                             :}
 
         |   CONST_PRED:n                    {:  InstrucPrograma ins1 = new InstrucPrograma();
@@ -118,7 +143,7 @@ expr    ::= NUM:n                           {:  InstrucPrograma ins1 =  new Inst
                                                 ins2.TipInstr = EnumTipoInstr.SYMBOL;
                                                 ins2.symbolHoc = n;
                                                 
-                                                RESULT = maquinaHoc4.code2(ins1, ins2);S
+                                                RESULT = maquinaHoc4.code2(ins1, ins2);
                                             :}
 
         |   asgn:ind                        {:  RESULT = ind; :}
@@ -145,11 +170,12 @@ expr    ::= NUM:n                           {:  InstrucPrograma ins1 =  new Inst
                                                 ins1.TipInstr = EnumTipoInstr.INSTRUC;
                                                 ins1.Instruc = EnumInstrMaq.DIV;
                                                 RESULT = maquinaHoc4.code(ins1);
+                                                /*RESULT = ind1 (utilizable para hoc5)*/
                                             :}
 
-        |   ParIzq expr ParDer             {:  RESULT = ind;  :}
+        |   ParIzq expr:ind ParDer          {:  RESULT = ind;  :}
 
-        |   BLTIN:v ParIzq expr ParDer     {:   InstrucPrograma ins1 = new InstrucPrograma();
+        |   BLTIN:v ParIzq expr ParDer      {:   InstrucPrograma ins1 = new InstrucPrograma();
                                                 ins1.TipInstr = EnumTipoInstr.INSTRUC;
                                                 ins1.Instruc = EnumInstrMaq.BLTIN;
 
@@ -166,11 +192,12 @@ expr    ::= NUM:n                           {:  InstrucPrograma ins1 =  new Inst
 
                                                 RESULT = maquinaHoc4.code(ins1);
                                             :}
+                                    %prec MENOSUNARIO
 
-        |   expr:base OpPotencia expr:exponente{:  InstrucPrograma ins1 = new InstrucPrograma();
+        |   expr OpPotencia expr:           {:  InstrucPrograma ins1 = new InstrucPrograma();
                                                 ins1.TipInstr = EnumTipoInstr.INSTRUC;
                                                 ins1.Instruc = EnumInstrMaq.POWER;
 
                                                 RESULT = maquinaHoc4.code(ins1);
                                             :}
-    ;
+        ;

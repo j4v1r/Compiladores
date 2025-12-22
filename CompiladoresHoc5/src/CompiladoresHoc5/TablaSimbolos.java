@@ -126,7 +126,7 @@ import java.util.List;
         ListaSimbolos.add(s);
         
         s = new SymbolHoc();
-        s.SetSymbol("int", EnumTipoSymbol.BLTIN, EnumBLTIN.INT);
+        s.SetSymbol("int", EnumTipoSymbol.BLTIN, EnumBLTIN.INTEGER);
         ListaSimbolos.add(s);
         
         s = new SymbolHoc();
