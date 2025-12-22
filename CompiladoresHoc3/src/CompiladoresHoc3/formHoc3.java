@@ -68,6 +68,11 @@ public class formHoc3 extends javax.swing.JFrame {
         });
 
         btnAnalizSintactico.setText("Sintáctico");
+        btnAnalizSintactico.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAnalizSintacticoActionPerformed(evt);
+            }
+        });
 
         jLabel1.setText("Expresión a Analizar");
 
@@ -209,6 +214,25 @@ public class formHoc3 extends javax.swing.JFrame {
         
         txtAreaTokens.repaint();
     }//GEN-LAST:event_btnAnalizadorLexActionPerformed
+
+    private void btnAnalizSintacticoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAnalizSintacticoActionPerformed
+        // TODO add your handling code here:
+        txtResultSintactico.setText("");
+        AnalizadorLexico lexic = null;
+        
+        try{
+            lexic = new AnalizadorLexico(new FileReader("archEntrada.txt"));
+        }catch(FileNotFoundException ex){   
+        }
+        
+        Sintac = new AnalizadorSintactico(lexic);
+        Sintac.frmInterfaz = this;
+        
+        try{
+            Object result = Sintac.parse().value;
+        }catch(Exception ex){
+        }
+    }//GEN-LAST:event_btnAnalizSintacticoActionPerformed
 
     /**
      * @param args the command line arguments
