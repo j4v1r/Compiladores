@@ -1,0 +1,13 @@
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
+package CompiladoresHoc5;
+
+/**
+ *
+ * @author Rogelio Colunga R
+ */
+public enum EnumTipoSymbol {
+    VAR, UNDEF,BLTIN, CONST_PREDEF;
+}
