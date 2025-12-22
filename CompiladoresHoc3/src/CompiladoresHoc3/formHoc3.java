@@ -4,12 +4,22 @@
  */
 package CompiladoresHoc3;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.Reader;
+import java.lang.System.Logger;
+import java.lang.System.Logger.Level;
+import java_cup.runtime.Symbol;
+
 /**
  *
  * @author Jesus
  */
 public class formHoc3 extends javax.swing.JFrame {
-
+    AnalizadorSintactico Sintac;
     /**
      * Creates new form formHoc3
      */
@@ -27,37 +37,37 @@ public class formHoc3 extends javax.swing.JFrame {
     private void initComponents() {
 
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTextArea1 = new javax.swing.JTextArea();
+        textoAAnalizar = new javax.swing.JTextArea();
         jScrollPane2 = new javax.swing.JScrollPane();
-        jTextArea2 = new javax.swing.JTextArea();
+        txtAreaTokens = new javax.swing.JTextArea();
         jScrollPane3 = new javax.swing.JScrollPane();
         txtResultSintactico = new javax.swing.JTextArea();
-        jButton1 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
+        btnAnalizadorLex = new javax.swing.JButton();
+        btnAnalizSintactico = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        jTextArea1.setColumns(20);
-        jTextArea1.setRows(5);
-        jScrollPane1.setViewportView(jTextArea1);
+        textoAAnalizar.setColumns(20);
+        textoAAnalizar.setRows(5);
+        jScrollPane1.setViewportView(textoAAnalizar);
 
-        jTextArea2.setColumns(20);
-        jTextArea2.setRows(5);
-        jScrollPane2.setViewportView(jTextArea2);
+        txtAreaTokens.setColumns(20);
+        txtAreaTokens.setRows(5);
+        jScrollPane2.setViewportView(txtAreaTokens);
 
         txtResultSintactico.setColumns(20);
         txtResultSintactico.setRows(5);
         jScrollPane3.setViewportView(txtResultSintactico);
 
-        jButton1.setText("Analizar Léxicamente");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        btnAnalizadorLex.setText("Analizar Léxicamente");
+        btnAnalizadorLex.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                btnAnalizadorLexActionPerformed(evt);
             }
         });
 
-        jButton2.setText("Sintáctico");
+        btnAnalizSintactico.setText("Sintáctico");
 
         jLabel1.setText("Expresión a Analizar");
 
@@ -72,7 +82,7 @@ public class formHoc3 extends javax.swing.JFrame {
                         .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 282, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jButton2)
+                        .addComponent(btnAnalizSintactico)
                         .addContainerGap())
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -81,7 +91,7 @@ public class formHoc3 extends javax.swing.JFrame {
                         .addGap(18, 18, 18)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
-                                .addComponent(jButton1)
+                                .addComponent(btnAnalizadorLex)
                                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 316, Short.MAX_VALUE)
@@ -90,16 +100,16 @@ public class formHoc3 extends javax.swing.JFrame {
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(24, 24, 24)
+                .addGap(23, 23, 23)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton1)
+                    .addComponent(btnAnalizadorLex)
                     .addComponent(jLabel1))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 131, Short.MAX_VALUE)
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 132, Short.MAX_VALUE)
                     .addComponent(jScrollPane1))
                 .addGap(24, 24, 24)
-                .addComponent(jButton2)
+                .addComponent(btnAnalizSintactico)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 148, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(34, 34, 34))
@@ -108,9 +118,97 @@ public class formHoc3 extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+    private void btnAnalizadorLexActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAnalizadorLexActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jButton1ActionPerformed
+        Symbol simb;
+        String Lexema = new String();
+        String cadAux = new String();
+        File archEntrada = new File("archEntrada.txt");
+        PrintWriter escribir;
+        txtAreaTokens.setText("");
+        
+        try{
+            escribir = new PrintWriter(archEntrada);
+            escribir.print(textoAAnalizar.getText());
+            escribir.close();
+            //System.out.println("Obtiene texto a analizar");
+        }catch(FileNotFoundException ex){
+            //Logger.getLogger(formHoc3.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        try{
+            Reader lector;
+            lector = new FileReader("archEntrada.txt");
+            
+            AnalizadorLexico AnalizLexico = new AnalizadorLexico(lector);
+            //System.out.println("Lee aRCHENTRADA");
+            do{
+                simb = AnalizLexico.next_token();
+                cadAux = Integer.toString(simb.sym);
+                Lexema = AnalizLexico.yytext();
+                
+                if(simb.sym==AnalizadorSintacticoSym.EOF){
+                    cadAux = "Token: " + cadAux + "\tIdentToken: FIN \n";
+                }else{
+                    switch(simb.sym){
+                        case AnalizadorSintacticoSym.SEMIC:
+                            cadAux = "Token: " + cadAux + "\tIdentToken: SEMIC\t Lexema: " + Lexema + "\n";
+                            break;
+                        case AnalizadorSintacticoSym.NUM:
+                            cadAux = "Token: " + cadAux + "\tIdentToken: NUM\t Lexema: " + Lexema + "\n";
+                            break;
+                        case AnalizadorSintacticoSym.CONST_PRED:
+                            cadAux = "Token: " + cadAux + "\tIdentToken: CONST_PRED\t Lexema: " + Lexema + "\n";
+                            break;
+                        case AnalizadorSintacticoSym.BLTIN:
+                            cadAux = "Token: " + cadAux + "\tIdentToken: BLTIN\t Lexema: " + Lexema + "\n";
+                            break;
+                        case AnalizadorSintacticoSym.MENOSUNARIO:
+                            cadAux = "Token: " + cadAux + "\tIdentToken: MENOSUNARIO\t Lexema: " + Lexema + "\n";
+                            break;
+                        case AnalizadorSintacticoSym.OpAsig:
+                            cadAux = "Token: " + cadAux + "\tIdentToken: OpAsig\t Lexema: " + Lexema + "\n";
+                            break;
+                        case AnalizadorSintacticoSym.OpDiv:
+                            cadAux = "Token: " + cadAux + "\tIdentToken: OpDiv\t Lexema: " + Lexema + "\n";
+                            break;
+                        case AnalizadorSintacticoSym.OpPotencia:
+                            cadAux = "Token: " + cadAux + "\tIdentToken: OpPotencia\t Lexema: " + Lexema + "\n";
+                            break;
+                        case AnalizadorSintacticoSym.OpProd:
+                            cadAux = "Token: " + cadAux + "\tIdentToken: OpProd\t Lexema: " + Lexema + "\n";
+                            break;
+                        case AnalizadorSintacticoSym.OpResta:
+                            cadAux = "Token: " + cadAux + "\tIdentToken: OpResta\t Lexema: " + Lexema + "\n";
+                            break;
+                        case AnalizadorSintacticoSym.OpSuma:
+                            cadAux = "Token: " + cadAux + "\tIdentToken: OpSuma\t Lexema: " + Lexema + "\n";
+                            break;
+                        case AnalizadorSintacticoSym.ParDer:
+                            cadAux = "Token: " + cadAux + "\tIdentToken: ParDer\t Lexema: " + Lexema + "\n";
+                            break;
+                        case AnalizadorSintacticoSym.ParIzq:
+                            cadAux = "Token: " + cadAux + "\tIdentToken: ParIzq\t Lexema: " + Lexema + "\n";
+                            break;   
+                        case AnalizadorSintacticoSym.VAR:
+                            cadAux = "Token: " + cadAux + "\tIdentToken: VAR\t Lexema: " + Lexema + "\n";
+                            break; 
+                        default:
+                            cadAux = "Token: " + cadAux + "\tIdentToken: OTRO\t Lexema: " + Lexema + "\n";
+                    }
+                }
+                
+                txtAreaTokens.append(cadAux);
+                
+            }while(simb.sym!=AnalizadorSintacticoSym.EOF);
+        
+        }catch(IOException ex){
+            txtAreaTokens.append("CatchError \n");
+            //Logger.getLogger(formHoc3.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        txtAreaTokens.repaint();
+    }//GEN-LAST:event_btnAnalizadorLexActionPerformed
 
     /**
      * @param args the command line arguments
@@ -148,14 +246,14 @@ public class formHoc3 extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
+    private javax.swing.JButton btnAnalizSintactico;
+    private javax.swing.JButton btnAnalizadorLex;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
-    private javax.swing.JTextArea jTextArea1;
-    private javax.swing.JTextArea jTextArea2;
+    private javax.swing.JTextArea textoAAnalizar;
+    private javax.swing.JTextArea txtAreaTokens;
     public javax.swing.JTextArea txtResultSintactico;
     // End of variables declaration//GEN-END:variables
 }

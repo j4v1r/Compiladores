@@ -1,5 +1,5 @@
 package CompiladoresHoc3;
-import java_cup-runtime.*;
+import java_cup.runtime.*;
 import java.io.Reader;
 
 %% /* inici de las declaracions JFlex*/
@@ -14,6 +14,7 @@ import java.io.Reader;
     public int TipSimb;
 
     TablaSimbolos ListaSimb = new TablaSimbolos();
+    /*ListaSimb.init();*/
 
     private Symbol symbol(int type){
         return new Symbol(type, yyline, yycolumn);
@@ -31,9 +32,9 @@ Digito=[0-9]
 [ \t\n]+                    {;}
 ";"                         {   return symbol(AnalizadorSintacticoSym.SEMIC);}
 {Digito}+(\.{Digito}+)?     {
-                                return symbol(AnalizadorSintacticoSym.NUM,new Float(yytext())):
+                                return symbol(AnalizadorSintacticoSym.NUM, new Float(yytext()));
                             }
-"="                         {   return symbol(AnalizadorSintacticoSym.OpAsing);}
+"="                         {   return symbol(AnalizadorSintacticoSym.OpAsig);}
 "/"                         {   return symbol(AnalizadorSintacticoSym.OpDiv);}
 "*"                         {   return symbol(AnalizadorSintacticoSym.OpProd);}
 "-"                         {   return symbol(AnalizadorSintacticoSym.OpResta);}

@@ -11,6 +11,7 @@ import java.util.List;
  *
  * @author Jesus
  */
+//Clase equivalente a "init.c"
 public class TablaSimbolos {
     
     List<SymbolHoc> ListaSimbolos;
@@ -33,8 +34,9 @@ public class TablaSimbolos {
         }
         return null;
     }
+    
     /*El siguiente install aplica para VAR, UNDEF, CONST_PREDEF*/
-    public SymbolHoc intall(String name , EnumTipoSymbol type, float val)
+    public SymbolHoc install(String name , EnumTipoSymbol type, float val)
     {
         SymbolHoc s;
         s= new SymbolHoc();
@@ -43,7 +45,7 @@ public class TablaSimbolos {
         return s;
     }
     
-    public SymbolHoc intall(String name , EnumTipoSymbol type, EnumBLTIN funcPredef)
+    public SymbolHoc install(String name , EnumTipoSymbol type, EnumBLTIN funcPredef)
     {
         SymbolHoc s;
         s= new SymbolHoc();

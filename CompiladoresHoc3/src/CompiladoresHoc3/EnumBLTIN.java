@@ -9,5 +9,5 @@ package CompiladoresHoc3;
  * @author Jesus
  */
 public enum EnumBLTIN {
-    SIN, COS , ATAN, LOG, LOG10,EXP,SQRT,INT,ABS;
+    SIN, COS , ATAN, LOG, LOG10, EXP, SQRT, INT, ABS;
 }

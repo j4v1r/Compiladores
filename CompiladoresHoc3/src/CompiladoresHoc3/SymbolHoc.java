@@ -8,7 +8,9 @@ package CompiladoresHoc3;
  *
  * @author Jesus
  */
+//Clase equivalente a "hoc.h"
 public class SymbolHoc {
+    
     public String name;
     public EnumTipoSymbol TipoSymbol;
     public float val;
@@ -20,6 +22,7 @@ public class SymbolHoc {
         val=0;
     }
     
+    //VAR, UNDEF, CONST_PREDEF
     public SymbolHoc(String nombre , EnumTipoSymbol TipSimbol  , float valor)
     {
         name= nombre;
@@ -27,14 +30,15 @@ public class SymbolHoc {
         val = valor;
     }
     
-    public SymbolHoc(String nombre, EnumTipoSymbol TipSimbol,EnumBLTIN func )
+    //BLTIN
+    public SymbolHoc(String nombre, EnumTipoSymbol TipSimbol,EnumBLTIN func)
     {
         name = nombre;
         TipoSymbol = TipSimbol;
         FuncPredef = func;
     }
     
-    public void SetSymbol(String nombre, EnumTipoSymbol TipSimbol, float valor)
+    public void SetSymbol(String nombre, EnumTipoSymbol TipSimbol,float valor)
     {
         name = nombre;
         TipoSymbol = TipSimbol;
