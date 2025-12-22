@@ -167,7 +167,7 @@ expr    ::= NUM:n                           {:  InstrucPrograma ins1 =  new Inst
                                                 RESULT = maquinaHoc4.code(ins1);
                                             :}
 
-    |   expr:base OpPotencia expr:exponente {:  InstrucPrograma ins1 = new InstrucPrograma();
+        |   expr:base OpPotencia expr:exponente{:  InstrucPrograma ins1 = new InstrucPrograma();
                                                 ins1.TipInstr = EnumTipoInstr.INSTRUC;
                                                 ins1.Instruc = EnumInstrMaq.POWER;
 

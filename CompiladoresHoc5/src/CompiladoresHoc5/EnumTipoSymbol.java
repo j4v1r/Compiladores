@@ -9,5 +9,5 @@ package CompiladoresHoc5;
  * @author Rogelio Colunga R
  */
 public enum EnumTipoSymbol {
-    VAR, UNDEF,BLTIN, CONST_PREDEF;
+    VAR, UNDEF, BLTIN, CONST_PREDEF;
 }
