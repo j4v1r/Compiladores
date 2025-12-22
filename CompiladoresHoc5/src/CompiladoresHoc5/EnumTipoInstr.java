@@ -8,6 +8,6 @@ package CompiladoresHoc5;
  *
  * @author Rogelio Colunga R
  */
-public enum EnumTipoSymbol {
-        VAR, UNDEF, BLTIN, CONST_PREDEF;
+public enum EnumTipoInstr {
+    INSTRUC, SYMBOL, BLTIN;
 }

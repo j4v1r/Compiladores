@@ -9,5 +9,5 @@ package CompiladoresHoc5;
  * @author Rogelio Colunga R
  */
 public enum EnumBLTIN {
-    SIN, COS , ATAN, LOG, LOG10, EXP, SQRT, INT, ABS;
+    SIN, COS , ATAN, LOG, LOG10, EXP, SQRT, INTEGER, ABS;
 }
