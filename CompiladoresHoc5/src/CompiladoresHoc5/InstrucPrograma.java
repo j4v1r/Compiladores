@@ -13,7 +13,7 @@ public class InstrucPrograma {
     public EnumTipoInstr TipInstr; //INSTRUC, SYMBOLM BLTIN
     public EnumInstrMaq Instruc;   /*EVAL, ADD, SUB, ..., ASSING, BLTIN, 
                                    VARPUSH, PRINT, STOP*/
-    public EnumBLTIN Func_BLTIN;
-    public SymbolHoc symbolHoc;
+    public EnumBLTIN Func_BLTIN;   /*SIN, COS, TAN, ..., INTEGER, ABS*/
+    public SymbolHoc symbolHoc;    /*Nodo Symbol*/
     
 }
