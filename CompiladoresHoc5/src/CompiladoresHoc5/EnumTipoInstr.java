@@ -9,5 +9,5 @@ package CompiladoresHoc5;
  * @author Rogelio Colunga R
  */
 public enum EnumTipoInstr {
-    INSTRUC, SYMBOL, BLTIN;
+    INSTRUC, SYMBOL, BLTIN, JUMP;
 }

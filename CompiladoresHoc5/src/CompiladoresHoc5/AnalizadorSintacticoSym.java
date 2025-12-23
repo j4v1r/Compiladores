@@ -8,21 +8,36 @@ package CompiladoresHoc5;
 /** CUP generated class containing symbol constants. */
 public class AnalizadorSintacticoSym {
   /* terminals */
-  public static final int NUM = 11;
-  public static final int OpDiv = 6;
+  public static final int AND = 23;
   public static final int ParDer = 10;
-  public static final int MENOSUNARIO = 15;
-  public static final int OpSuma = 3;
-  public static final int SEMIC = 2;
-  public static final int OpResta = 4;
-  public static final int CONST_PRED = 13;
-  public static final int EOF = 0;
-  public static final int VAR = 12;
+  public static final int NE = 29;
+  public static final int LT = 26;
+  public static final int CONST_PRED = 19;
+  public static final int ELSE = 16;
+  public static final int OR = 22;
+  public static final int LlaveIzq = 11;
+  public static final int WHILE = 14;
+  public static final int NOT = 30;
+  public static final int LlaveDer = 12;
   public static final int OpProd = 5;
-  public static final int OpPotencia = 8;
+  public static final int OpDiv = 6;
+  public static final int IF = 15;
+  public static final int GT = 24;
+  public static final int LE = 27;
+  public static final int NUM = 17;
   public static final int OpAsig = 7;
+  public static final int SEMIC = 2;
+  public static final int MENOSUNARIO = 21;
+  public static final int EOF = 0;
+  public static final int GE = 25;
+  public static final int BLTIN = 20;
+  public static final int PRINT = 13;
   public static final int error = 1;
-  public static final int BLTIN = 14;
+  public static final int EQ = 28;
+  public static final int OpSuma = 3;
+  public static final int OpResta = 4;
+  public static final int OpPotencia = 8;
+  public static final int VAR = 18;
   public static final int ParIzq = 9;
   public static final String[] terminalNames = new String[] {
   "EOF",
@@ -36,11 +51,26 @@ public class AnalizadorSintacticoSym {
   "OpPotencia",
   "ParIzq",
   "ParDer",
+  "LlaveIzq",
+  "LlaveDer",
+  "PRINT",
+  "WHILE",
+  "IF",
+  "ELSE",
   "NUM",
   "VAR",
   "CONST_PRED",
   "BLTIN",
-  "MENOSUNARIO"
+  "MENOSUNARIO",
+  "OR",
+  "AND",
+  "GT",
+  "GE",
+  "LT",
+  "LE",
+  "EQ",
+  "NE",
+  "NOT"
   };
 }
 

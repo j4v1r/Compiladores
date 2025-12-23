@@ -10,5 +10,6 @@ package CompiladoresHoc5;
  */
 public enum EnumInstrMaq {
     EVAL, ADD, SUB, MUL, DIV, NEGATE, POWER, ASSIGN, BLTIN, 
-    VARPUSH, CONSTPUSH, PRINT, STOP;
+    VARPUSH, CONSTPUSH, PRINT, STOP, GT, GE, LT, LE, NE, EQ,
+    OR, AND, NOT, WHILECODE, IFCODE;
 }
