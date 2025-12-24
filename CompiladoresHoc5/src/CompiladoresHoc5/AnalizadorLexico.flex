@@ -15,7 +15,6 @@ import java.io.Reader;
     public int TipSimb;
 
     TablaSimbolos ListaSimb = new TablaSimbolos();
-    ListaSimb.init();
 
     private Symbol symbol(int type){
         return new Symbol(type, yyline, yycolumn);
@@ -33,10 +32,10 @@ Digito=[0-9]
 [ \t\n]+                    {;}
 ";"                         {   return symbol(AnalizadorSintacticoSym.SEMIC);}
 
-{Digito}+(\.{Digito}+)?     {
-                                s = new SymbolHoc("",EnumTipoSymbol.CONST_NUM,new Float(yytext())); //la mitad de esta linea me la invente yo no se si esta bien
+{Digito}+(\.{Digito}+)?     {   s = new SymbolHoc("",EnumTipoSymbol.CONST_NUM,new Float(yytext())); //la mitad de esta linea me la invente yo no se si esta bien
                                 return symbol(AnalizadorSintacticoSym.NUM,s);
                             }
+
 "&&"                        {   return symbol(AnalizadorSintacticoSym.AND);}
 "||"                        {   return symbol(AnalizadorSintacticoSym.OR);}
 "!"                         {   return symbol(AnalizadorSintacticoSym.NOT);}
@@ -54,15 +53,14 @@ Digito=[0-9]
 ")"                         {   return symbol(AnalizadorSintacticoSym.ParDer);}
 "("                         {   return symbol(AnalizadorSintacticoSym.ParIzq);}
 "^"                         {   return symbol(AnalizadorSintacticoSym.OpPotencia);}
-"{"                         {   return symbol(AnalizadorSintacticoSym.LLAVE_IZQ);}
-"}"                         {   return symbol(AnalizadorSintacticoSym.LLAVE_DER);}
+"{"                         {   return symbol(AnalizadorSintacticoSym.LlaveIzq);}
+"}"                         {   return symbol(AnalizadorSintacticoSym.LlaveDer);}
 "if"                        {   return symbol(AnalizadorSintacticoSym.IF);}
 "while"                     {   return symbol(AnalizadorSintacticoSym.WHILE);}
 "else"                      {   return symbol(AnalizadorSintacticoSym.ELSE);}
 "print"                     {   return symbol(AnalizadorSintacticoSym.PRINT);}
 
-{Letra}({Letra}|{Digito})*  {
-                                s = ListaSimb.lookup(yytext());
+{Letra}({Letra}|{Digito})*  {   s = ListaSimb.lookup(yytext());
                                 if(s == null) //Se agrega como variable no inicializada
                                     s = ListaSimb.install(yytext(),EnumTipoSymbol.UNDEF,(float)0.0);
                                 switch(s.TipoSymbol){

@@ -198,8 +198,9 @@ end     ::=                                 {:  InstrucPrograma ins1 =  new Inst
                                             :}
         ;
 
-stmtlist::= stmt
-        | stmtlist stmt                     {:   
+stmtlist::= stmt:ind                        {:  RESULT = ind;
+                                            :}
+        | stmtlist:ind stmt                 {:  RESULT = ind;   
                                             :}
         ;
 

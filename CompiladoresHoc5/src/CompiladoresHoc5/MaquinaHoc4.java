@@ -26,7 +26,6 @@ public class MaquinaHoc4 {
     public MaquinaHoc4()
     {
         TabSimb = new TablaSimbolos();
-        TabSimb.init();
 
         Prog = new InstrucPrograma[2048];
         progp = 0;
@@ -98,7 +97,6 @@ public class MaquinaHoc4 {
                     break;
                 case ASSIGN:
                     assign();
-
                     break;
                 case BLTIN:
                     bltin();
