@@ -67,7 +67,7 @@ public class formHoc5 extends javax.swing.JFrame {
             }
         });
 
-        btnAnalizSintactico.setText("Sintáctico");
+        btnAnalizSintactico.setText("Análisis Sintáctico");
         btnAnalizSintactico.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnAnalizSintacticoActionPerformed(evt);

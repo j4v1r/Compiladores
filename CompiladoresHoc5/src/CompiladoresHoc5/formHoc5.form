@@ -136,7 +136,7 @@
     </Component>
     <Component class="javax.swing.JButton" name="btnAnalizSintactico">
       <Properties>
-        <Property name="text" type="java.lang.String" value="Sint&#xe1;ctico"/>
+        <Property name="text" type="java.lang.String" value="An&#xe1;lisis Sint&#xe1;ctico"/>
       </Properties>
       <Events>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnAnalizSintacticoActionPerformed"/>

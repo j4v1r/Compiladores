@@ -347,6 +347,9 @@ class CUP$AnalizadorSintactico$actions {
           case 2: // list ::= list stmt SEMIC 
             {
               Object RESULT =null;
+		int valExprleft = ((java_cup.runtime.Symbol)CUP$AnalizadorSintactico$stack.elementAt(CUP$AnalizadorSintactico$top-1)).left;
+		int valExprright = ((java_cup.runtime.Symbol)CUP$AnalizadorSintactico$stack.elementAt(CUP$AnalizadorSintactico$top-1)).right;
+		Integer valExpr = (Integer)((java_cup.runtime.Symbol) CUP$AnalizadorSintactico$stack.elementAt(CUP$AnalizadorSintactico$top-1)).value;
 		
                                                 /*InstrucPrograma ins1 =  new InstrucPrograma();
                                                 ins1.TipInstr = EnumTipoInstr.INSTRUC;
@@ -357,6 +360,7 @@ class CUP$AnalizadorSintactico$actions {
                                                 ins2.Instruc = EnumInstrMaq.STOP;
 
                                                 maquinaHoc4.code2(ins1,ins2);*/
+                                                frmInterfaz.txtResultSintactico.append(Float.toString(valExpr) + "\n");
                                             
               CUP$AnalizadorSintactico$result = parser.getSymbolFactory().newSymbol("list",0, ((java_cup.runtime.Symbol)CUP$AnalizadorSintactico$stack.elementAt(CUP$AnalizadorSintactico$top-2)), ((java_cup.runtime.Symbol)CUP$AnalizadorSintactico$stack.peek()), RESULT);
             }
@@ -378,7 +382,7 @@ class CUP$AnalizadorSintactico$actions {
 
                                                 InstrucPrograma ins2 =  new InstrucPrograma();
                                                 ins2.TipInstr = EnumTipoInstr.SYMBOL;
-                                                ins2.Instruc = v;
+                                                ins2.Instruc = EnumInstrMaq.ASSIGN;
                                                 
                                                 InstrucPrograma ins3 =  new InstrucPrograma();
                                                 ins3.TipInstr = EnumTipoInstr.INSTRUC;
@@ -441,12 +445,12 @@ class CUP$AnalizadorSintactico$actions {
 		InstrucPrograma ins1 = new InstrucPrograma();
                                                 ins1.TipInstr = EnumTipoInstr.JUMP;
                                                 ins1.jump = ind3;
-                                                maquinaHoc4.prog[ind1+1] = ins1;
+                                                maquinaHoc4.Prog[ind1+1] = ins1;
 
                                                 InstrucPrograma ins2 = new InstrucPrograma();
                                                 ins2.TipInstr = EnumTipoInstr.JUMP;
                                                 ins1.jump = ind4;
-                                                maquinaHoc4.prog[ind1+2] = ins2;
+                                                maquinaHoc4.Prog[ind1+2] = ins2;
 
                                                 RESULT = ind1;
                                             
@@ -473,12 +477,12 @@ class CUP$AnalizadorSintactico$actions {
 		InstrucPrograma ins1 = new InstrucPrograma();
                                                 ins1.TipInstr = EnumTipoInstr.JUMP;
                                                 ins1.jump = ind3;
-                                                maquinaHoc4.prog[ind1+1] = ins1;
+                                                maquinaHoc4.Prog[ind1+1] = ins1;
 
                                                 InstrucPrograma ins2 = new InstrucPrograma();
                                                 ins2.TipInstr = EnumTipoInstr.JUMP;
-                                                ins1.jump = ind4;
-                                                maquinaHoc4.prog[ind1+3] = ins2;
+                                                ins2.jump = ind4;
+                                                maquinaHoc4.Prog[ind1+3] = ins2;
 
                                                 RESULT = ind1;
                                             
@@ -511,17 +515,17 @@ class CUP$AnalizadorSintactico$actions {
 		  InstrucPrograma ins1 = new InstrucPrograma();
                                                 ins1.TipInstr = EnumTipoInstr.JUMP;
                                                 ins1.jump = ind3;
-                                                maquinaHoc4.prog[ind1+1] = ins1;
+                                                maquinaHoc4.Prog[ind1+1] = ins1;
 
                                                 InstrucPrograma ins2 = new InstrucPrograma();
                                                 ins2.TipInstr = EnumTipoInstr.JUMP;
-                                                ins1.jump = ind6;
-                                                maquinaHoc4.prog[ind1+2] = ins2;
+                                                ins2.jump = ind6;
+                                                maquinaHoc4.Prog[ind1+2] = ins2;
                                                 
-                                                InstrucPrograma ins2 = new InstrucPrograma();
-                                                ins2.TipInstr = EnumTipoInstr.JUMP;
-                                                ins1.jump = ind7;
-                                                maquinaHoc4.prog[ind1+3] = ins3;
+                                                InstrucPrograma ins3 = new InstrucPrograma();
+                                                ins3.TipInstr = EnumTipoInstr.JUMP;
+                                                ins3.jump = ind7;
+                                                maquinaHoc4.Prog[ind1+3] = ins3;
 
                                                 RESULT = ind1;
                                             
@@ -832,7 +836,7 @@ class CUP$AnalizadorSintactico$actions {
                                                 ins2.TipInstr = EnumTipoInstr.BLTIN;
                                                 ins2.Func_BLTIN = v.FuncPredef;
 
-                                                maquinaHoc4.code(ins1, ins2);
+                                                maquinaHoc4.code2(ins1, ins2);
                                                 RESULT = ind1;
                                             
               CUP$AnalizadorSintactico$result = parser.getSymbolFactory().newSymbol("expr",2, ((java_cup.runtime.Symbol)CUP$AnalizadorSintactico$stack.elementAt(CUP$AnalizadorSintactico$top-3)), ((java_cup.runtime.Symbol)CUP$AnalizadorSintactico$stack.peek()), RESULT);
