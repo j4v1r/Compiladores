@@ -2,9 +2,9 @@ package CompiladoresHoc5;
 import java_cup.runtime.*;
 import java.io.Reader;
 
-%% /* inici de las declaracions JFlex*/
+%% /* inicio de las declaracions JFlex*/
 %class AnalizadorLexico
-%line 
+%line
 %column
 %char
 %cup
@@ -13,6 +13,9 @@ import java.io.Reader;
     public SymbolHoc s;
     public MaquinaHoc4 maqHoc;
     public int TipSimb;
+
+    TablaSimbolos ListaSimb = new TablaSimbolos();
+    ListaSimb.init();
 
     private Symbol symbol(int type){
         return new Symbol(type, yyline, yycolumn);
@@ -29,9 +32,20 @@ Digito=[0-9]
 
 [ \t\n]+                    {;}
 ";"                         {   return symbol(AnalizadorSintacticoSym.SEMIC);}
-{Digito}+(\.{Digito}+)?     {   s = new SymbolHoc("",EnumTipoSymbol.CONST_NUM, new Float(yytext()));
-                                return symbol(AnalizadorSintacticoSym.NUM, s);
+
+{Digito}+(\.{Digito}+)?     {
+                                s = new SymbolHoc("",EnumTipoSymbol.CONST_NUM,new Float(yytext())); //la mitad de esta linea me la invente yo no se si esta bien
+                                return symbol(AnalizadorSintacticoSym.NUM,s);
                             }
+"&&"                        {   return symbol(AnalizadorSintacticoSym.AND);}
+"||"                        {   return symbol(AnalizadorSintacticoSym.OR);}
+"!"                         {   return symbol(AnalizadorSintacticoSym.NOT);}
+">="                        {   return symbol(AnalizadorSintacticoSym.GE);}
+">"                         {   return symbol(AnalizadorSintacticoSym.GT);}
+"<="                        {   return symbol(AnalizadorSintacticoSym.LE);}
+"<"                         {   return symbol(AnalizadorSintacticoSym.LT);}
+"=="                        {   return symbol(AnalizadorSintacticoSym.EQ);}
+"!="                        {   return symbol(AnalizadorSintacticoSym.NE);}
 "="                         {   return symbol(AnalizadorSintacticoSym.OpAsig);}
 "/"                         {   return symbol(AnalizadorSintacticoSym.OpDiv);}
 "*"                         {   return symbol(AnalizadorSintacticoSym.OpProd);}
@@ -39,11 +53,18 @@ Digito=[0-9]
 "+"                         {   return symbol(AnalizadorSintacticoSym.OpSuma);}
 ")"                         {   return symbol(AnalizadorSintacticoSym.ParDer);}
 "("                         {   return symbol(AnalizadorSintacticoSym.ParIzq);}
-\^                          {   return symbol(AnalizadorSintacticoSym.OpPotencia);}
+"^"                         {   return symbol(AnalizadorSintacticoSym.OpPotencia);}
+"{"                         {   return symbol(AnalizadorSintacticoSym.LLAVE_IZQ);}
+"}"                         {   return symbol(AnalizadorSintacticoSym.LLAVE_DER);}
+"if"                        {   return symbol(AnalizadorSintacticoSym.IF);}
+"while"                     {   return symbol(AnalizadorSintacticoSym.WHILE);}
+"else"                      {   return symbol(AnalizadorSintacticoSym.ELSE);}
+"print"                     {   return symbol(AnalizadorSintacticoSym.PRINT);}
+
 {Letra}({Letra}|{Digito})*  {
-                                s = maqHoc.TabSimb.lookup(yytext());
+                                s = ListaSimb.lookup(yytext());
                                 if(s == null) //Se agrega como variable no inicializada
-                                    s = maqHoc.TabSimb.install(yytext(),EnumTipoSymbol.UNDEF,(float)0.0);
+                                    s = ListaSimb.install(yytext(),EnumTipoSymbol.UNDEF,(float)0.0);
                                 switch(s.TipoSymbol){
                                     case UNDEF:
                                             TipSimb = AnalizadorSintacticoSym.VAR;
@@ -61,5 +82,8 @@ Digito=[0-9]
                                 return symbol(TipSimb,s);
                             }
 . { return symbol(AnalizadorSintacticoSym.error);}
+
+
+
 
 
