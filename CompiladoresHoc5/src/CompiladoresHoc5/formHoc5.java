@@ -57,7 +57,9 @@ public class formHoc5 extends javax.swing.JFrame {
         jLabel1 = new javax.swing.JLabel();
         jScrollPane5 = new javax.swing.JScrollPane();
         jTableCodigo = new javax.swing.JTable();
-        jButton1 = new javax.swing.JButton();
+        ejecutarCodigo = new javax.swing.JButton();
+        jScrollPane6 = new javax.swing.JScrollPane();
+        txtResultado = new javax.swing.JTextArea();
 
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -78,10 +80,12 @@ public class formHoc5 extends javax.swing.JFrame {
         textoAAnalizar.setRows(5);
         jScrollPane1.setViewportView(textoAAnalizar);
 
+        txtAreaTokens.setEditable(false);
         txtAreaTokens.setColumns(20);
         txtAreaTokens.setRows(5);
         jScrollPane2.setViewportView(txtAreaTokens);
 
+        txtResultSintactico.setEditable(false);
         txtResultSintactico.setColumns(20);
         txtResultSintactico.setRows(5);
         jScrollPane3.setViewportView(txtResultSintactico);
@@ -130,12 +134,17 @@ public class formHoc5 extends javax.swing.JFrame {
         });
         jScrollPane5.setViewportView(jTableCodigo);
 
-        jButton1.setText("Ejecutar Código");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        ejecutarCodigo.setText("Ejecutar Código");
+        ejecutarCodigo.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                ejecutarCodigoActionPerformed(evt);
             }
         });
+
+        txtResultado.setEditable(false);
+        txtResultado.setColumns(20);
+        txtResultado.setRows(5);
+        jScrollPane6.setViewportView(txtResultado);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -143,28 +152,33 @@ public class formHoc5 extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGap(34, 34, 34)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel1)
-                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 282, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(18, 18, 18)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(btnAnalizadorLex)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 168, Short.MAX_VALUE))
-                            .addComponent(jScrollPane2)))
-                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(btnAnalizSintactico)
-                            .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 282, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(18, 18, 18)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(0, 0, Short.MAX_VALUE))
-                            .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))))
-                .addGap(31, 31, 31))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jScrollPane6, javax.swing.GroupLayout.PREFERRED_SIZE, 282, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel1)
+                                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 282, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGap(18, 18, 18)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(btnAnalizadorLex)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 404, Short.MAX_VALUE))
+                                    .addComponent(jScrollPane2)))
+                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(btnAnalizSintactico)
+                                    .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 282, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGap(18, 18, 18)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(ejecutarCodigo, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGap(0, 0, Short.MAX_VALUE))
+                                    .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))))
+                        .addGap(31, 31, 31))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -180,12 +194,14 @@ public class formHoc5 extends javax.swing.JFrame {
                 .addGap(56, 56, 56)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnAnalizSintactico)
-                    .addComponent(jButton1))
+                    .addComponent(ejecutarCodigo))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 172, Short.MAX_VALUE)
                     .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
-                .addContainerGap(48, Short.MAX_VALUE))
+                .addGap(36, 36, 36)
+                .addComponent(jScrollPane6, javax.swing.GroupLayout.PREFERRED_SIZE, 134, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(27, Short.MAX_VALUE))
         );
 
         pack();
@@ -214,6 +230,8 @@ public class formHoc5 extends javax.swing.JFrame {
             lector = new FileReader("archEntrada.txt");
             
             AnalizadorLexico AnalizLexico = new AnalizadorLexico(lector);
+            AnalizLexico.maqHoc = new MaquinaHoc4();
+            AnalizLexico.maqHoc.AreaResult = txtResultado;
             //System.out.println("Lee aRCHENTRADA");
             do{
                 simb = AnalizLexico.next_token();
@@ -359,6 +377,7 @@ public class formHoc5 extends javax.swing.JFrame {
             Sintac = new AnalizadorSintactico(lexic);
             Sintac.frmInterfaz = this;
             Sintac.maquinaHoc4 = new MaquinaHoc4();
+            Sintac.maquinaHoc4.AreaResult = txtResultado;
             lexic.maqHoc = Sintac.maquinaHoc4;
             
             SymbolHoc s;
@@ -606,16 +625,13 @@ public class formHoc5 extends javax.swing.JFrame {
         jTableCodigo.repaint();
     }//GEN-LAST:event_btnAnalizSintacticoActionPerformed
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+    private void ejecutarCodigoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ejecutarCodigoActionPerformed
         // TODO add your handling code here:
-        Symbol simb;
-        String Lexema = new String();
-        String cadAux = new String();
-        File archEntrada = new File("archEntrada.txt");
-        PrintWriter escribir;
-        txtAreaTokens.setText("");
-        txtResultSintactico.setText("");
-    }//GEN-LAST:event_jButton1ActionPerformed
+        txtResultado.setText("");
+        Sintac.maquinaHoc4.execute(0);
+        Sintac.maquinaHoc4.AreaResult = txtResultado;
+        txtResultado.repaint();
+    }//GEN-LAST:event_ejecutarCodigoActionPerformed
 
     /**
      * @param args the command line arguments
@@ -655,17 +671,19 @@ public class formHoc5 extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAnalizSintactico;
     private javax.swing.JButton btnAnalizadorLex;
-    private javax.swing.JButton jButton1;
+    private javax.swing.JButton ejecutarCodigo;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JScrollPane jScrollPane4;
     private javax.swing.JScrollPane jScrollPane5;
+    private javax.swing.JScrollPane jScrollPane6;
     private javax.swing.JTable jTable1;
     private javax.swing.JTable jTableCodigo;
     private javax.swing.JTextArea textoAAnalizar;
     private javax.swing.JTextArea txtAreaTokens;
     public javax.swing.JTextArea txtResultSintactico;
+    private javax.swing.JTextArea txtResultado;
     // End of variables declaration//GEN-END:variables
 }

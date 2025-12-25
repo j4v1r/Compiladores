@@ -4,6 +4,7 @@
  */
 package CompiladoresHoc5;
 
+import static CompiladoresHoc5.EnumInstrMaq.CONSTPUSH;
 import java.util.Stack;
 import javax.swing.JTable;
 import javax.swing.JTextArea;
@@ -77,20 +78,19 @@ public class MaquinaHoc4 {
         String TypeSymbol = new String();
         String ValSymbol = new String();
 
-        DefaultTableModel modeloTablaPila = (DefaultTableModel) jTablePila.getModel();
-
         pc=ind;
 
+        
         while(Prog[pc].Instruc != EnumInstrMaq.STOP){
-            AreaResult.append("PC = "+ Integer.toString(pc)+"\n");
+            /*AreaResult.append("PC = "+ Integer.toString(pc)+"\n");*/
 
             TipDatum="";
             Val="";
             NombSymbol="";
             TypeSymbol="";
             ValSymbol="";
-
             instruc = Prog[pc++];
+            System.out.println(instruc.Instruc);
             switch(instruc.Instruc){
                 case ADD:
                     add();
@@ -103,6 +103,9 @@ public class MaquinaHoc4 {
                     break;
                 case CONSTPUSH:
                     constpush();
+                    break;
+                case VARPUSH:
+                    varpush();
                     break;
                 case DIV:
                     div();
@@ -141,6 +144,7 @@ public class MaquinaHoc4 {
                     power();
                     break;
                 case PRINT:
+                    System.out.println("QQ pedo print");
                     print();
                     break;
                 case STOP: // creo que apartir de estos se van a quitar y no se ocupan
@@ -254,9 +258,9 @@ public class MaquinaHoc4 {
     {
         Datum op1,op2;
         op2 = new Datum();
-        op1 =stack.pop();
-        op1.val = op2.symb.val;
-        stack.push(op1);
+        op1 = stack.pop();
+        op2.val = op1.symb.val;
+        stack.push(op2);
     }
 
     public void mul()
@@ -307,7 +311,7 @@ public class MaquinaHoc4 {
     public void varpush()
     {
         Datum op1;
-        op1 =stack.pop();
+        op1 = new Datum();
         op1.symb = Prog[pc++].symbolHoc;
         stack.push(op1);
     }
