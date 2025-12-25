@@ -53,7 +53,7 @@ precedence left MENOSUNARIO, NOT;
 precedence right OpPotencia;
 
 list    ::=
-        | list stmt:valExpr SEMIC                   {:
+        | list stmt                         {:
                                                 /*InstrucPrograma ins1 =  new InstrucPrograma();
                                                 ins1.TipInstr = EnumTipoInstr.INSTRUC;
                                                 ins1.Instruc = EnumInstrMaq.PRINT;
@@ -63,7 +63,7 @@ list    ::=
                                                 ins2.Instruc = EnumInstrMaq.STOP;
 
                                                 maquinaHoc4.code2(ins1,ins2);*/
-                                                frmInterfaz.txtResultSintactico.append(Float.toString(valExpr) + "\n");
+                                                /*frmInterfaz.txtResultSintactico.append(Float.toString(valExpr) + "\n");*/
                                             :}
         ;
 asgn    ::= VAR:v OpAsig expr:ind1          {:  InstrucPrograma ins1 =  new InstrucPrograma();
@@ -72,7 +72,7 @@ asgn    ::= VAR:v OpAsig expr:ind1          {:  InstrucPrograma ins1 =  new Inst
 
                                                 InstrucPrograma ins2 =  new InstrucPrograma();
                                                 ins2.TipInstr = EnumTipoInstr.SYMBOL;
-                                                ins2.Instruc = EnumInstrMaq.ASSIGN;
+                                                ins2.symbolHoc = v;
                                                 
                                                 InstrucPrograma ins3 =  new InstrucPrograma();
                                                 ins3.TipInstr = EnumTipoInstr.INSTRUC;
@@ -143,7 +143,7 @@ stmt    ::= asgn:ind1 SEMIC                 {:  RESULT = ind1;
                                             :}
         ;
 
-cond    ::= ParIzq expr:ind1                {:  InstrucPrograma ins1 =  new InstrucPrograma();
+cond    ::= ParIzq expr:ind1 ParDer         {:  InstrucPrograma ins1 =  new InstrucPrograma();
                                                 ins1.TipInstr = EnumTipoInstr.INSTRUC;
                                                 ins1.Instruc = EnumInstrMaq.STOP;
                                                 maquinaHoc4.code(ins1);

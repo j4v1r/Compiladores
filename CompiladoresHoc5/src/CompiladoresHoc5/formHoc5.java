@@ -4,6 +4,12 @@
  */
 package CompiladoresHoc5;
 
+import static CompiladoresHoc5.EnumBLTIN.ABS;
+import static CompiladoresHoc5.EnumBLTIN.SIN;
+import static CompiladoresHoc5.EnumInstrMaq.ASSIGN;
+import static CompiladoresHoc5.EnumInstrMaq.CONSTPUSH;
+import static CompiladoresHoc5.EnumInstrMaq.VARPUSH;
+import static CompiladoresHoc5.EnumTipoSymbol.VAR;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -12,7 +18,9 @@ import java.io.PrintWriter;
 import java.io.Reader;
 import java.lang.System.Logger;
 import java.lang.System.Logger.Level;
+import java.util.Iterator;
 import java_cup.runtime.Symbol;
+import javax.swing.table.DefaultTableModel;
 
 /**
  *
@@ -36,6 +44,8 @@ public class formHoc5 extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jScrollPane4 = new javax.swing.JScrollPane();
+        jTable1 = new javax.swing.JTable();
         jScrollPane1 = new javax.swing.JScrollPane();
         textoAAnalizar = new javax.swing.JTextArea();
         jScrollPane2 = new javax.swing.JScrollPane();
@@ -45,6 +55,22 @@ public class formHoc5 extends javax.swing.JFrame {
         btnAnalizadorLex = new javax.swing.JButton();
         btnAnalizSintactico = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
+        jScrollPane5 = new javax.swing.JScrollPane();
+        jTableCodigo = new javax.swing.JTable();
+        jButton1 = new javax.swing.JButton();
+
+        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
+            },
+            new String [] {
+                "Title 1", "Title 2", "Title 3", "Title 4"
+            }
+        ));
+        jScrollPane4.setViewportView(jTable1);
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -76,31 +102,69 @@ public class formHoc5 extends javax.swing.JFrame {
 
         jLabel1.setText("Expresión a Analizar");
 
+        jTableCodigo.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null}
+            },
+            new String [] {
+                "NUM_INSTRUCT", "INST-SYMB-FUNC", "NAME", "VAL", "FUNCIÓN"
+            }
+        ) {
+            Class[] types = new Class [] {
+                java.lang.Integer.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class
+            };
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false, false
+            };
+
+            public Class getColumnClass(int columnIndex) {
+                return types [columnIndex];
+            }
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        jScrollPane5.setViewportView(jTableCodigo);
+
+        jButton1.setText("Ejecutar Código");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGap(34, 34, 34)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 282, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, Short.MAX_VALUE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(btnAnalizSintactico)
-                        .addContainerGap())
-                    .addGroup(layout.createSequentialGroup()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 282, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel1))
+                            .addComponent(jLabel1)
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 282, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(18, 18, 18)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(btnAnalizadorLex)
-                                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 168, Short.MAX_VALUE))
+                            .addComponent(jScrollPane2)))
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(btnAnalizSintactico)
+                            .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 282, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(18, 18, 18)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
-                                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 316, Short.MAX_VALUE)
-                                .addGap(31, 31, 31))))))
+                                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(0, 0, Short.MAX_VALUE))
+                            .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))))
+                .addGap(31, 31, 31))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -110,14 +174,18 @@ public class formHoc5 extends javax.swing.JFrame {
                     .addComponent(btnAnalizadorLex)
                     .addComponent(jLabel1))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 132, Short.MAX_VALUE)
-                    .addComponent(jScrollPane1))
-                .addGap(24, 24, 24)
-                .addComponent(btnAnalizSintactico)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 188, Short.MAX_VALUE)
+                    .addComponent(jScrollPane2))
+                .addGap(56, 56, 56)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnAnalizSintactico)
+                    .addComponent(jButton1))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 148, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(34, 34, 34))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 172, Short.MAX_VALUE)
+                    .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
+                .addContainerGap(48, Short.MAX_VALUE))
         );
 
         pack();
@@ -201,49 +269,49 @@ public class formHoc5 extends javax.swing.JFrame {
                             
                         /*Nuevos casos*/    
                         case AnalizadorSintacticoSym.AND:
-                            cadAux = "Token: " + cadAux + "\tIdentToken: SEMIC\t Lexema: " + Lexema + "\n";
+                            cadAux = "Token: " + cadAux + "\tIdentToken: AND\t Lexema: " + Lexema + "\n";
                             break;
                         case AnalizadorSintacticoSym.OR:
-                            cadAux = "Token: " + cadAux + "\tIdentToken: SEMIC\t Lexema: " + Lexema + "\n";
+                            cadAux = "Token: " + cadAux + "\tIdentToken: OR\t Lexema: " + Lexema + "\n";
                             break;
                         case AnalizadorSintacticoSym.EQ:
-                            cadAux = "Token: " + cadAux + "\tIdentToken: SEMIC\t Lexema: " + Lexema + "\n";
+                            cadAux = "Token: " + cadAux + "\tIdentToken: EQ\t Lexema: " + Lexema + "\n";
                             break;
                         case AnalizadorSintacticoSym.NE:
-                            cadAux = "Token: " + cadAux + "\tIdentToken: SEMIC\t Lexema: " + Lexema + "\n";
+                            cadAux = "Token: " + cadAux + "\tIdentToken: NE\t Lexema: " + Lexema + "\n";
                             break;    
                         case AnalizadorSintacticoSym.NOT:
-                            cadAux = "Token: " + cadAux + "\tIdentToken: SEMIC\t Lexema: " + Lexema + "\n";
+                            cadAux = "Token: " + cadAux + "\tIdentToken: NOT\t Lexema: " + Lexema + "\n";
                         break;
                         case AnalizadorSintacticoSym.GT:
-                            cadAux = "Token: " + cadAux + "\tIdentToken: SEMIC\t Lexema: " + Lexema + "\n";
+                            cadAux = "Token: " + cadAux + "\tIdentToken: GT\t Lexema: " + Lexema + "\n";
                             break;
                         case AnalizadorSintacticoSym.GE:
-                            cadAux = "Token: " + cadAux + "\tIdentToken: SEMIC\t Lexema: " + Lexema + "\n";
+                            cadAux = "Token: " + cadAux + "\tIdentToken: GE\t Lexema: " + Lexema + "\n";
                             break;
                         case AnalizadorSintacticoSym.LT:
-                            cadAux = "Token: " + cadAux + "\tIdentToken: SEMIC\t Lexema: " + Lexema + "\n";
+                            cadAux = "Token: " + cadAux + "\tIdentToken: LT\t Lexema: " + Lexema + "\n";
                             break;
                         case AnalizadorSintacticoSym.LE:
-                            cadAux = "Token: " + cadAux + "\tIdentToken: SEMIC\t Lexema: " + Lexema + "\n";
+                            cadAux = "Token: " + cadAux + "\tIdentToken: LE\t Lexema: " + Lexema + "\n";
                             break;
                         case AnalizadorSintacticoSym.LlaveDer:
-                            cadAux = "Token: " + cadAux + "\tIdentToken: SEMIC\t Lexema: " + Lexema + "\n";
+                            cadAux = "Token: " + cadAux + "\tIdentToken: LlaveDer\t Lexema: " + Lexema + "\n";
                             break;    
                         case AnalizadorSintacticoSym.LlaveIzq:
-                            cadAux = "Token: " + cadAux + "\tIdentToken: SEMIC\t Lexema: " + Lexema + "\n";
+                            cadAux = "Token: " + cadAux + "\tIdentToken: LLaveIzq\t Lexema: " + Lexema + "\n";
                             break;
                         case AnalizadorSintacticoSym.IF:
-                            cadAux = "Token: " + cadAux + "\tIdentToken: SEMIC\t Lexema: " + Lexema + "\n";
+                            cadAux = "Token: " + cadAux + "\tIdentToken: IF\t Lexema: " + Lexema + "\n";
                             break;
                         case AnalizadorSintacticoSym.ELSE:
-                            cadAux = "Token: " + cadAux + "\tIdentToken: SEMIC\t Lexema: " + Lexema + "\n";
+                            cadAux = "Token: " + cadAux + "\tIdentToken: ELSE\t Lexema: " + Lexema + "\n";
                             break;
                         case AnalizadorSintacticoSym.WHILE:
-                            cadAux = "Token: " + cadAux + "\tIdentToken: SEMIC\t Lexema: " + Lexema + "\n";
+                            cadAux = "Token: " + cadAux + "\tIdentToken: WHILE\t Lexema: " + Lexema + "\n";
                             break; 
                         case AnalizadorSintacticoSym.PRINT:
-                            cadAux = "Token: " + cadAux + "\tIdentToken: SEMIC\t Lexema: " + Lexema + "\n";
+                            cadAux = "Token: " + cadAux + "\tIdentToken: PRINT\t Lexema: " + Lexema + "\n";
                             break;    
                         default:
                             cadAux = "Token: " + cadAux + "\tIdentToken: OTRO\t Lexema: " + Lexema + "\n";
@@ -264,22 +332,290 @@ public class formHoc5 extends javax.swing.JFrame {
 
     private void btnAnalizSintacticoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAnalizSintacticoActionPerformed
         // TODO add your handling code here:
+        String cadAux = new String();
+        
+        String cadInst = new String();
+        String name = new String();
+        String valor = new String();
+        String ptrFunc = new String();
+        Object os[] = new Object[5];
+        
+        DefaultTableModel modeloTabla = (DefaultTableModel) jTableCodigo.getModel();
+        InstrucPrograma instruc;
+        AnalizadorLexico lexic =  null;
+        
         txtResultSintactico.setText("");
-        AnalizadorLexico lexic = null;
         
         try{
             lexic = new AnalizadorLexico(new FileReader("archEntrada.txt"));
-        }catch(FileNotFoundException ex){   
+            System.out.println("Lee archEntrada");
+        }catch(FileNotFoundException ex){
+            System.out.println("Error al leer archEntrada");
         }
         
-        Sintac = new AnalizadorSintactico(lexic);
-        Sintac.frmInterfaz = this;
+        modeloTabla.setRowCount(0);
         
         try{
-            Object result = Sintac.parse().value;
+            Sintac = new AnalizadorSintactico(lexic);
+            Sintac.frmInterfaz = this;
+            Sintac.maquinaHoc4 = new MaquinaHoc4();
+            lexic.maqHoc = Sintac.maquinaHoc4;
+            
+            SymbolHoc s;
+            Iterator it = lexic.maqHoc.TabSimb.ListaSimbolos.iterator();
+            
+            while(it.hasNext()){
+                s = (SymbolHoc) it.next();
+                cadAux = "--------------------------------\n"
+                        +" Symbol: " + s.name + "\n" +
+                         "----------------------------------";
+                txtAreaTokens.append(cadAux);
+            }
+            
+            try{
+                Object result = Sintac.parse().value;
+                
+                InstrucPrograma ins2 = new InstrucPrograma();
+                ins2.TipInstr = EnumTipoInstr.INSTRUC;
+                ins2.Instruc = EnumInstrMaq.STOP;
+                
+                Sintac.maquinaHoc4.code(ins2);
+            }catch(Exception ex){
+            }
+            
+            txtResultSintactico.append("\n FIN DEL ANÁLISIS SINTÁCTICO");
+            
+            for(int i=0; i<Sintac.maquinaHoc4.progp; i++){
+                instruc = Sintac.maquinaHoc4.Prog[i];
+                
+                cadAux = "----ERROR-----";
+                
+                cadInst = "";
+                name = "";
+                valor = "";
+                ptrFunc = "";
+                
+                switch(instruc.TipInstr){
+                    case INSTRUC:
+                        switch(instruc.Instruc){
+                            case ADD:
+                                cadAux = "instruc ADD";
+                                cadInst = "ADD";
+                                break;
+                            case ASSIGN:
+                                cadAux = "instruc ASSIGN";
+                                cadInst = "ASSIGN";
+                                break;
+                            case BLTIN:
+                                cadAux = "instruc BLTIN";
+                                cadInst = "BLTIN";
+                                break;
+                            case CONSTPUSH:
+                                cadAux = "instruc CONSTPUSH";
+                                cadInst = "CONSTPUSH";
+                                break;
+                            case VARPUSH:
+                                cadAux = "instruc VARPUSH";
+                                cadInst = "VARPUSH";
+                                break;
+                            case DIV:
+                                cadAux = "instruc DIV";
+                                cadInst = "DIV";
+                                break;
+                            case EVAL:
+                                cadAux = "instruc EVAL";
+                                cadInst = "EVAL";
+                                break;
+                            case MUL:
+                                cadAux = "instruc MUL";
+                                cadInst = "MUL";
+                                break;
+                            case NEGATE:
+                                cadAux = "instruc NEGATE";
+                                cadInst = "NEGATE";
+                                break;
+                            case POWER:
+                                cadAux = "instruc POWER";
+                                cadInst = "POWER";
+                                break; 
+                            case PRINT:
+                                cadAux = "instruc PRINT";
+                                cadInst = "PRINT";
+                                break;     
+                            case STOP:
+                                cadAux = "instruc STOP";
+                                cadInst = "STOP";
+                                break;   
+                            case SUB:
+                                cadAux = "instruc SUB";
+                                cadInst = "SUB";
+                                break;
+                            case AND:
+                                cadAux = "instruc AND";
+                                cadInst = "AND";
+                                break; 
+                            case OR:
+                                cadAux = "instruc OR";
+                                cadInst = "OR";
+                                break; 
+                            case NOT:
+                                cadAux = "instruc NOT";
+                                cadInst = "NOT";
+                                break;
+                            case GE:
+                                cadAux = "instruc GE";
+                                cadInst = "GE";
+                                break; 
+                            case GT:
+                                cadAux = "instruc GT";
+                                cadInst = "GT";
+                                break; 
+                            case LE:
+                                cadAux = "instruc LE";
+                                cadInst = "LE";
+                                break;
+                            case LT:
+                                cadAux = "instruc LT";
+                                cadInst = "LT";
+                                break;
+                            case NE:
+                                cadAux = "instruc NE";
+                                cadInst = "NE";
+                                break;
+                            case EQ:
+                                cadAux = "instruc EQ";
+                                cadInst = "EQ";
+                                break; 
+                            case IFCODE:
+                                cadAux = "instruc IFCODE";
+                                cadInst = "IFCODE";
+                                break; 
+                            case WHILECODE:
+                                cadAux = "instruc WHILECODE";
+                                cadInst = "WHILECODE";
+                                break; 
+                        }
+                        cadAux += "\n";
+                        txtAreaTokens.append(cadAux);
+                        break;
+                    
+                    case BLTIN:
+                        cadInst = "FruncPredef";
+                        
+                        switch(instruc.Func_BLTIN){
+                            case ABS:
+                                cadAux = "bltin ABS";
+                                name = "abs";
+                                ptrFunc = "ABS";
+                                break; 
+                            case ATAN:
+                                cadAux = "bltin ATAN";
+                                name = "atan";
+                                ptrFunc = "ATAN";
+                                break;
+                            case SIN:
+                                cadAux = "bltin SIN";
+                                name = "sin";
+                                ptrFunc = "SIN";
+                                break;
+                            case COS:
+                                cadAux = "bltin COS";
+                                name = "cos";
+                                ptrFunc = "COS";
+                                break; 
+                            case LOG:
+                                cadAux = "bltin LOG";
+                                name = "log";
+                                ptrFunc = "LOG";
+                                break;
+                            case LOG10:
+                                cadAux = "bltin LOG10";
+                                name = "log10";
+                                ptrFunc = "LOG10";
+                                break;
+                            case EXP:
+                                cadAux = "bltin EXP";
+                                name = "exp";
+                                ptrFunc = "EXP";
+                                break;
+                            case SQRT:
+                                cadAux = "bltin SQRT";
+                                name = "sqrt";
+                                ptrFunc = "SQRT";
+                                break;
+                            case INTEGER:
+                                cadAux = "bltin INTEGER";
+                                name = "integer";
+                                ptrFunc = "INTEGER";
+                                break;
+                        }
+                        cadAux += "\n";
+                        txtAreaTokens.append(cadAux);
+                        break;
+                    
+                    case SYMBOL:
+                        cadAux = "Symbol name: " + instruc.symbolHoc.name + " val=" + Float.toString(instruc.symbolHoc.val) + "\n";
+                        txtAreaTokens.append(cadAux);
+                        
+                        switch(instruc.symbolHoc.TipoSymbol){
+                            case VAR:
+                                cadInst = "VAR";
+                                name = instruc.symbolHoc.name;
+                                valor = Float.toString(instruc.symbolHoc.val);
+                                ptrFunc = "";
+                                break;
+                            case UNDEF:
+                                cadInst = "UNDEF ";
+                                name = instruc.symbolHoc.name;
+                                valor = "---";
+                                ptrFunc = "";
+                                break;
+                            case CONST_NUM:
+                                cadInst = "CONST_NUM";
+                                name = instruc.symbolHoc.name;
+                                valor = Float.toString(instruc.symbolHoc.val);
+                                ptrFunc = "";
+                                break;
+                            case CONST_PREDEF:
+                                cadInst = "CONST_PREDEF";
+                                name = instruc.symbolHoc.name;
+                                valor = Float.toString(instruc.symbolHoc.val);
+                                ptrFunc = "";
+                                break;
+                        }
+                        break;
+                        
+                    case JUMP: 
+                        cadInst = "JUMP"; 
+                        valor = Integer.toString(instruc.jump);
+                        break;
+                    }
+                    
+                    os[0] = (Object)i;
+                    os[1] = (Object)cadInst;
+                    os[2] = (Object)name;
+                    os[3] = (Object)valor;
+                    os[4] = (Object)ptrFunc;
+                    modeloTabla.addRow(os);
+                }
         }catch(Exception ex){
+            ex.printStackTrace();
         }
+        
+        txtResultSintactico.repaint();
+        jTableCodigo.repaint();
     }//GEN-LAST:event_btnAnalizSintacticoActionPerformed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        // TODO add your handling code here:
+        Symbol simb;
+        String Lexema = new String();
+        String cadAux = new String();
+        File archEntrada = new File("archEntrada.txt");
+        PrintWriter escribir;
+        txtAreaTokens.setText("");
+        txtResultSintactico.setText("");
+    }//GEN-LAST:event_jButton1ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -319,10 +655,15 @@ public class formHoc5 extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAnalizSintactico;
     private javax.swing.JButton btnAnalizadorLex;
+    private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
+    private javax.swing.JScrollPane jScrollPane4;
+    private javax.swing.JScrollPane jScrollPane5;
+    private javax.swing.JTable jTable1;
+    private javax.swing.JTable jTableCodigo;
     private javax.swing.JTextArea textoAAnalizar;
     private javax.swing.JTextArea txtAreaTokens;
     public javax.swing.JTextArea txtResultSintactico;
