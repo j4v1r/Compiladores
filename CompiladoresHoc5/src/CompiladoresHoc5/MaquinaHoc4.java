@@ -163,9 +163,9 @@ public class MaquinaHoc4 {
                 case SUB:
                     sub();
                     break;
-                /*case JUMPTRUE:
+                case JUMPTRUE:
                     jumpTrue();
-                    break;*/
+                    break;
                 case JUMPFALSE:
                     jumpFalse();
                     break;
@@ -400,17 +400,17 @@ public class MaquinaHoc4 {
         }
     }
 
-    /*public void jumpTrue() {
+    public void jumpTrue() {
         Datum valCond;
         valCond = stack.pop();
         int auxPc = pc;
 
-        if (valCond.val != 0.0) {
-            pc = Prog[auxPc].jump;
+        if (valCond.val == 0.0) {
+            pc = Prog[auxPc+1].jump;//
         } else {
             pc = auxPc + 2;
         }
-    }*/
+    }
 
     //Estos tres estan agregados para se tienen que quitar para poner esto en el java cup en jumps
     public void whilecode() {
