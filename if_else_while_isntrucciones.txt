@@ -49,3 +49,15 @@ else
 print 10;
 }
 print n;
+
+n=2;
+if(n<7)
+{
+print 0;
+n=n+1;
+}
+else
+{
+print 1;
+}
+print n;

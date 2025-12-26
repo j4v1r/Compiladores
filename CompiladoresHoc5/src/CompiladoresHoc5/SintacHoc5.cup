@@ -41,7 +41,7 @@ terminal MENOSUNARIO;
 terminal OR, AND, GT, GE, LT, LE, EQ, NE, NOT;
 
 non terminal list;
-non terminal Integer asgn, expr, stmt, stmtlist, if, end, cond, endcondif, endif, endcondwhile, endwhile; /*Casilla donde empieza su código*/
+non terminal Integer asgn, expr, stmt, stmtlist, if, end, cond, endcondif, endif, endelse, endcondwhile, endwhile; /*Casilla donde empieza su código*/
 
 precedence nonassoc IF;
 precedence nonassoc ELSE;
@@ -112,7 +112,7 @@ stmt    ::= asgn:ind1 SEMIC                 {:  RESULT = ind1;
                                                RESULT = ind1;
                                            :}
 
-        |   if                              
+        |   if:ind                          {:  RESULT = ind;:}
 
         |   LlaveIzq stmtlist:ind LlaveDer  {:  RESULT = ind;
                                             :}
@@ -120,36 +120,39 @@ stmt    ::= asgn:ind1 SEMIC                 {:  RESULT = ind1;
 
 if      ::= IF cond:ind1 endcondif:ind2 stmt:ind3 endif:ind4
                                            {:   System.out.println("IF-NORMAL");
+                                                System.out.println("IF-ELSE - dirección cond: " + ind1 + 
+                                                                  " dirección JUMPFALSE: " + ind2 +
+                                                                  " dirección  STOP: " + (ind2+1) +
+                                                                  " dirección STMT TRUE: " + ind3 +
+                                                                  " dirección ENDIF: " + ind4);
                                                 /*Fin del if*/
                                                 InstrucPrograma ins1 = new InstrucPrograma();
                                                 ins1.TipInstr = EnumTipoInstr.JUMP;
                                                 ins1.jump = ind4;
-                                                maquinaHoc4.Prog[ind2+2] = ins1;
-                                                
-                                                /*STOP para ELSE, hace salto a JUMPFALSE*/
-                                                InstrucPrograma ins2 = new InstrucPrograma();
-                                                ins2.TipInstr = EnumTipoInstr.JUMP;
-                                                ins2.jump = ind2+3;
-                                                maquinaHoc4.Prog[ind2+1] = ins2;
+                                                maquinaHoc4.Prog[ind2+1] = ins1;
 
                                                 RESULT = ind1;
                                             :}
-%prec IF
-        |   IF cond:ind1 endcondif:ind2 stmt:ind3 endif:ind4 ELSE stmt:ind5 endif:ind6      
-                                            {:  System.out.println("IF-ELSE");
-                                                /*STOP para ELSE, hace salto a stmt de else*/
-                                                InstrucPrograma ins2 = new InstrucPrograma();
-                                                ins2.TipInstr = EnumTipoInstr.JUMP;
-                                                ins2.jump = ind5;
-                                                maquinaHoc4.Prog[ind2+1] = ins2;
+                                        %prec IF
 
-                                                /*Fin del if-else*/
-                                                InstrucPrograma ins1 = new InstrucPrograma();
-                                                ins1.TipInstr = EnumTipoInstr.JUMP;
-                                                ins1.jump = ind6;
-                                                maquinaHoc4.Prog[ind2+2] = ins1;
-
-                                                RESULT = ind1;
+        |   IF cond:ind1 endcondif:ind2 stmt:ind3 endif:ind4 ELSE endelse:ind7 stmt:ind5 endif:ind6      
+                                            {:  System.out.println("IF-ELSE - dirección cond: " + ind1 + 
+                                                                  " dirección JUMPFALSE: " + ind2 +
+                                                                  " dirección STMT TRUE: " + ind3 +
+                                                                  " dirección ENDIF: " + ind4 +
+                                                                  " dirección STMT FALSE" + ind5 +
+                                                                  " dirección endif: " + ind6 +                                                                 
+                                                                  " dirección else: " + maquinaHoc4.progp);
+                                                /*1. JUMPFALSE: si condición falsa, saltar al bloque else*/
+                                                maquinaHoc4.Prog[ind2+1].jump = ind5;
+                                                
+                                               /*Fin del if*/
+                                               InstrucPrograma ins1 = new InstrucPrograma();
+                                               ins1.TipInstr = EnumTipoInstr.JUMP;
+                                               ins1.jump = ind6;
+                                               maquinaHoc4.Prog[ind4] = ins1;
+                                               
+                                               RESULT = ind1;
                                             :}
         ;
 
@@ -190,19 +193,15 @@ endwhile ::=                               {:  int auxProgp;
 endcondif::=                               {:   int auxProgp;
 
                                                 InstrucPrograma ins1 = new InstrucPrograma();
-                                                ins1.TipInstr = EnumTipoInstr.JUMP;
-                                                ins1.jump = -1;
+                                                ins1.TipInstr = EnumTipoInstr.INSTRUC;
+                                                ins1.Instruc = EnumInstrMaq.JUMPFALSE;
 
                                                 InstrucPrograma ins2 = new InstrucPrograma();
-                                                ins2.TipInstr = EnumTipoInstr.INSTRUC;
-                                                ins2.Instruc = EnumInstrMaq.JUMPTRUE;
+                                                ins2.TipInstr = EnumTipoInstr.JUMP;
+                                                ins2.jump = -1;
 
-                                                InstrucPrograma ins3 = new InstrucPrograma();
-                                                ins3.TipInstr = EnumTipoInstr.JUMP;
-                                                ins3.jump = -1;
-                                                    
                                                 auxProgp = maquinaHoc4.progp;
-                                                maquinaHoc4.code3(ins2,ins1,ins3);
+                                                maquinaHoc4.code2(ins1,ins2);
 
                                                 RESULT = auxProgp;
                                             :}
@@ -211,6 +210,20 @@ endcondif::=                               {:   int auxProgp;
 endif   ::=                                 {:  RESULT = maquinaHoc4.progp;
                                             :}
         ;
+
+endelse ::=                                 {: int auxProgp;
+
+                                               InstrucPrograma ins1 = new InstrucPrograma();
+                                               ins1.TipInstr = EnumTipoInstr.INSTRUC;
+                                               ins1.Instruc = EnumInstrMaq.STOP;
+
+                                               auxProgp = maquinaHoc4.progp;
+                                               maquinaHoc4.code(ins1);
+
+                                               RESULT = auxProgp;
+                                            :}
+        ;
+
 
 end     ::=                                 {:  InstrucPrograma ins1 =  new InstrucPrograma();
                                                 ins1.TipInstr = EnumTipoInstr.INSTRUC;
@@ -223,7 +236,7 @@ end     ::=                                 {:  InstrucPrograma ins1 =  new Inst
 
 stmtlist::= stmt:ind                        {:  RESULT = ind;
                                             :}
-        | stmtlist:ind stmt                 {:  RESULT = ind;   
+        | stmtlist:ind stmt:ind2                 {:  RESULT = ind;   
                                             :}
         ;
 

@@ -94,7 +94,7 @@ public class MaquinaHoc4 {
 
             if (instruc.Instruc == null) {
                 throw new RuntimeException(
-                        "Instrucción " + instruc.Instruc + " es null en pc=" + (pc-1)
+                        "Instrucción " + instruc.Instruc + " es null en pc=" + (pc - 1)
                 );
             }
 
@@ -387,16 +387,13 @@ public class MaquinaHoc4 {
     }
 
     public void jumpFalse() {
-        Datum valCond;
-        valCond = stack.pop();
-        int auxPc = pc;
+        Datum valCond = stack.pop();
 
+        // pc YA apunta a la instrucción JUMP
         if (valCond.val == 0.0) {
-            pc = Prog[auxPc].jump;//Condición FALSE, saltar a next_stmt
+            pc = Prog[pc].jump;
         } else {
-            System.out.println("PC es" + pc + "\n");
-            pc = auxPc + 1;//Condición TRUE, ejecuta el stmt
-            System.out.println("PC ahora es " + pc + "\n");
+            pc = pc + 1;
         }
     }
 
@@ -406,9 +403,10 @@ public class MaquinaHoc4 {
         int auxPc = pc;
 
         if (valCond.val == 0.0) {
-            pc = Prog[auxPc+1].jump;//
+            System.out.println("FALSE: Es Else\n");
+            pc = Prog[auxPc].jump;
         } else {
-            pc = auxPc + 2;
+            pc = auxPc + 1;
         }
     }
 
