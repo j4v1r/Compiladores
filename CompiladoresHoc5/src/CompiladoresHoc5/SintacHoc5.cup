@@ -111,15 +111,11 @@ stmt    ::= asgn:ind1 SEMIC                 {:  RESULT = ind1;
                                            :}
 
         |   IF cond:ind1 endcondif:ind2 stmt:ind3 endif:ind4
-                                           {:   InstrucPrograma ins1 = new InstrucPrograma();
+                                           {:   /*Fin del if*/
+                                                InstrucPrograma ins1 = new InstrucPrograma();
                                                 ins1.TipInstr = EnumTipoInstr.JUMP;
-                                                ins1.jump = ind3;
-                                                maquinaHoc4.Prog[ind1+1] = ins1;
-
-                                                InstrucPrograma ins2 = new InstrucPrograma();
-                                                ins2.TipInstr = EnumTipoInstr.JUMP;
-                                                ins2.jump = ind4;
-                                                maquinaHoc4.Prog[ind1+3] = ins2;
+                                                ins1.jump = ind4;
+                                                maquinaHoc4.Prog[ind2+1] = ins1;
 
                                                 RESULT = ind1;
                                             :}
@@ -181,19 +177,24 @@ endwhile ::=                               {:  int auxProgp;
                                            :}
         ;
 
-endcondif::=                                {:  int auxProgp;
+endcondif::=                               {:   int auxProgp;
+
                                                 InstrucPrograma ins1 = new InstrucPrograma();
                                                 ins1.TipInstr = EnumTipoInstr.INSTRUC;
                                                 ins1.Instruc = EnumInstrMaq.JUMPFALSE;
 
                                                 InstrucPrograma ins2 = new InstrucPrograma();
-                                                ins2.TipInstr = EnumTipoInstr.INSTRUC;
-                                                ins2.Instruc = EnumInstrMaq.STOP;
+                                                ins2.TipInstr = EnumTipoInstr.JUMP;
+                                                ins2.jump = -1;
                                                     
                                                 auxProgp = maquinaHoc4.progp;
                                                 maquinaHoc4.code2(ins1,ins2);
 
                                                 RESULT = auxProgp;
+                                            :}
+        ;
+
+endif   ::=                                 {:  RESULT = maquinaHoc4.progp;
                                             :}
         ;
 
