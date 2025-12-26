@@ -232,7 +232,7 @@ public class formHoc5 extends javax.swing.JFrame {
             AnalizadorLexico AnalizLexico = new AnalizadorLexico(lector);
             AnalizLexico.maqHoc = new MaquinaHoc4();
             AnalizLexico.maqHoc.AreaResult = txtResultado;
-            //System.out.println("Lee aRCHENTRADA");
+            
             do{
                 simb = AnalizLexico.next_token();
                 cadAux = Integer.toString(simb.sym);
@@ -366,7 +366,6 @@ public class formHoc5 extends javax.swing.JFrame {
         
         try{
             lexic = new AnalizadorLexico(new FileReader("archEntrada.txt"));
-            System.out.println("Lee archEntrada");
         }catch(FileNotFoundException ex){
             System.out.println("Error al leer archEntrada");
         }
@@ -382,14 +381,14 @@ public class formHoc5 extends javax.swing.JFrame {
             
             SymbolHoc s;
             Iterator it = lexic.maqHoc.TabSimb.ListaSimbolos.iterator();
-            
+            /*
             while(it.hasNext()){
                 s = (SymbolHoc) it.next();
                 cadAux = "--------------------------------\n"
                         +" Symbol: " + s.name + "\n" +
                          "----------------------------------";
                 txtAreaTokens.append(cadAux);
-            }
+            }*/
             
             try{
                 Object result = Sintac.parse().value;
@@ -505,9 +504,9 @@ public class formHoc5 extends javax.swing.JFrame {
                                 cadAux = "instruc EQ";
                                 cadInst = "EQ";
                                 break; 
-                            case IFCODE:
-                                cadAux = "instruc IFCODE";
-                                cadInst = "IFCODE";
+                            case JUMPFALSE:
+                                cadAux = "instruc JUMPFALSE";
+                                cadInst = "JUMPFALSE";
                                 break; 
                             case WHILECODE:
                                 cadAux = "instruc WHILECODE";

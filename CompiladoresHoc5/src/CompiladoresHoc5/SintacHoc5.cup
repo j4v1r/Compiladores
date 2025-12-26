@@ -41,7 +41,7 @@ terminal MENOSUNARIO;
 terminal OR, AND, GT, GE, LT, LE, EQ, NE, NOT;
 
 non terminal list;
-non terminal Integer asgn, expr, stmt, stmtlist, if, while, end, cond; /*Casilla donde empieza su código*/
+non terminal Integer asgn, expr, stmt, stmtlist, if, while, end, cond, endcondif, endcondwhile, endwhile; /*Casilla donde empieza su código*/
 
 precedence right OpAsig;
 precedence left OR;
@@ -94,15 +94,18 @@ stmt    ::= asgn:ind1 SEMIC                 {:  RESULT = ind1;
                                                 RESULT = ind1;
                                             :}
 
-        |   while:ind1 cond:ind2 stmt:ind3 end:ind4{:InstrucPrograma ins1 = new InstrucPrograma();
+        |   WHILE cond:ind1 endcondwhile:ind2 stmt:ind3 endwhile:ind4
+                                            {:  /*Fin de while?*/
+                                                InstrucPrograma ins1 = new InstrucPrograma();
                                                 ins1.TipInstr = EnumTipoInstr.JUMP;
-                                                ins1.jump = ind3;
-                                                maquinaHoc4.Prog[ind1+1] = ins1;
+                                                ins1.jump = ind4;
+                                                maquinaHoc4.Prog[ind2+1] = ins1;
 
+                                                /*Evalua de nuevo cond para seguir ciclo*/
                                                 InstrucPrograma ins2 = new InstrucPrograma();
                                                 ins2.TipInstr = EnumTipoInstr.JUMP;
-                                                ins1.jump = ind4;
-                                                maquinaHoc4.Prog[ind1+2] = ins2;
+                                                ins2.jump = ind1;
+                                                maquinaHoc4.Prog[ind4-1] = ins2;
 
                                                 RESULT = ind1;
                                             :}
@@ -143,50 +146,52 @@ stmt    ::= asgn:ind1 SEMIC                 {:  RESULT = ind1;
                                             :}
         ;
 
-cond    ::= ParIzq expr:ind1 ParDer         {:  InstrucPrograma ins1 =  new InstrucPrograma();
+cond    ::= ParIzq expr:ind1 ParDer         {:  RESULT = ind1;
+                                            :}
+        ;
+
+if      ::= IF                              {:  RESULT = maquinaHoc4.progp;
+                                            :}
+        ;
+
+endcondwhile::=                             {:  int auxProgp;
+                                                InstrucPrograma ins1 = new InstrucPrograma();
+                                                ins1.TipInstr = EnumTipoInstr.INSTRUC;
+                                                ins1.Instruc = EnumInstrMaq.JUMPFALSE;
+
+                                                InstrucPrograma ins2 = new InstrucPrograma();
+                                                ins2.TipInstr = EnumTipoInstr.JUMP;
+                                                ins2.jump = -1;
+                                                    
+                                                auxProgp = maquinaHoc4.progp;
+                                                maquinaHoc4.code2(ins1,ins2);
+
+                                                RESULT = auxProgp;
+                                            :}
+        ;
+
+endwhile ::=                                {:  InstrucPrograma ins1 = new InstrucPrograma();
                                                 ins1.TipInstr = EnumTipoInstr.INSTRUC;
                                                 ins1.Instruc = EnumInstrMaq.STOP;
                                                 maquinaHoc4.code(ins1);
 
-                                                RESULT = ind1;
+                                                RESULT = maquinaHoc4.progp;
                                             :}
         ;
 
-while   ::= WHILE                           {:  InstrucPrograma ins1 =  new InstrucPrograma();
+endcondif::=                                {:  int auxProgp;
+                                                InstrucPrograma ins1 = new InstrucPrograma();
                                                 ins1.TipInstr = EnumTipoInstr.INSTRUC;
-                                                ins1.Instruc = EnumInstrMaq.WHILECODE;
+                                                ins1.Instruc = EnumInstrMaq.JUMPFALSE;
 
-                                                InstrucPrograma ins2 =  new InstrucPrograma();
+                                                InstrucPrograma ins2 = new InstrucPrograma();
                                                 ins2.TipInstr = EnumTipoInstr.INSTRUC;
                                                 ins2.Instruc = EnumInstrMaq.STOP;
-                                                
-                                                InstrucPrograma ins3 =  new InstrucPrograma();
-                                                ins3.TipInstr = EnumTipoInstr.INSTRUC;
-                                                ins3.Instruc = EnumInstrMaq.STOP;
+                                                    
+                                                auxProgp = maquinaHoc4.progp;
+                                                maquinaHoc4.code2(ins1,ins2);
 
-                                                RESULT = maquinaHoc4.code3(ins1,ins2,ins3);
-                                            :}
-        ;
-
-if      ::= IF                              {:  InstrucPrograma ins1 =  new InstrucPrograma();
-                                                ins1.TipInstr = EnumTipoInstr.INSTRUC;
-                                                ins1.Instruc = EnumInstrMaq.IFCODE;
-                                                
-                                                RESULT = maquinaHoc4.code(ins1);
-
-                                                InstrucPrograma ins2 =  new InstrucPrograma();
-                                                ins2.TipInstr = EnumTipoInstr.INSTRUC;
-                                                ins2.Instruc = EnumInstrMaq.STOP;
-
-                                                InstrucPrograma ins3 =  new InstrucPrograma();
-                                                ins3.TipInstr = EnumTipoInstr.INSTRUC;
-                                                ins3.Instruc = EnumInstrMaq.STOP;
-                                                
-                                                InstrucPrograma ins4 =  new InstrucPrograma();
-                                                ins4.TipInstr = EnumTipoInstr.INSTRUC;
-                                                ins4.Instruc = EnumInstrMaq.STOP;
-
-                                                maquinaHoc4.code3(ins2,ins3,ins4);
+                                                RESULT = auxProgp;
                                             :}
         ;
 

@@ -24,8 +24,7 @@ public class MaquinaHoc4 {
     JTextArea AreaResult;
     JTable jTablePila;
 
-    public MaquinaHoc4()
-    {
+    public MaquinaHoc4() {
         TabSimb = new TablaSimbolos();
 
         Prog = new InstrucPrograma[2048];
@@ -36,62 +35,70 @@ public class MaquinaHoc4 {
         stack.clear();
     }
 
-    public void initcode()
-    {
+    public void initcode() {
         progp = 0;
         stack.clear();
     }
 
-    public Integer code(InstrucPrograma inst)
-    {
+    public Integer code(InstrucPrograma inst) {
         Integer oprogp = progp;
-        Prog[progp++]=inst;
+        Prog[progp++] = inst;
         return oprogp;
     }
 
-    public Integer code2(InstrucPrograma inst1,InstrucPrograma inst2)
-    {
+    public Integer code2(InstrucPrograma inst1, InstrucPrograma inst2) {
         Integer oprogp = progp;
-        Prog[progp++]=inst1;
-        Prog[progp++]=inst2;
-        return oprogp;
-    }
-    public Integer code3(InstrucPrograma inst1,InstrucPrograma inst2,InstrucPrograma inst3)
-    {
-        Integer oprogp = progp;
-        Prog[progp++]=inst1;
-        Prog[progp++]=inst2;
-        Prog[progp++]=inst3;
+        Prog[progp++] = inst1;
+        Prog[progp++] = inst2;
         return oprogp;
     }
 
-    public void execute(int ind)
-    {
+    public Integer code3(InstrucPrograma inst1, InstrucPrograma inst2, InstrucPrograma inst3) {
+        Integer oprogp = progp;
+        Prog[progp++] = inst1;
+        Prog[progp++] = inst2;
+        Prog[progp++] = inst3;
+        return oprogp;
+    }
+
+    public void execute(int ind) {
         InstrucPrograma instruc;
         Datum op1, op2;
         String CadResult = new String();
 
-        Object os[]= new Object[5];
+        Object os[] = new Object[5];
         String TipDatum = new String();
         String Val = new String();
         String NombSymbol = new String();
         String TypeSymbol = new String();
         String ValSymbol = new String();
 
-        pc=ind;
+        pc = ind;
 
-        
-        while(Prog[pc].Instruc != EnumInstrMaq.STOP){
+        while (Prog[pc].Instruc != EnumInstrMaq.STOP) {
             /*AreaResult.append("PC = "+ Integer.toString(pc)+"\n");*/
 
-            TipDatum="";
-            Val="";
-            NombSymbol="";
-            TypeSymbol="";
-            ValSymbol="";
+            TipDatum = "";
+            Val = "";
+            NombSymbol = "";
+            TypeSymbol = "";
+            ValSymbol = "";
+
             instruc = Prog[pc++];
+
+            if (instruc.TipInstr == EnumTipoInstr.JUMP) {
+                pc = instruc.jump;
+                continue;
+            }
+
+            if (instruc.Instruc == null) {
+                throw new RuntimeException(
+                        "Instrucción " + instruc.Instruc + " es null en pc=" + (pc-1)
+                );
+            }
+
             System.out.println(instruc.Instruc);
-            switch(instruc.Instruc){
+            switch (instruc.Instruc) {
                 case ADD:
                     add();
                     break;
@@ -144,27 +151,22 @@ public class MaquinaHoc4 {
                     power();
                     break;
                 case PRINT:
-                    System.out.println("QQ pedo print");
                     print();
-                    break;
-                case STOP: // creo que apartir de estos se van a quitar y no se ocupan
-                    stop();
                     break;
                 case SUB:
                     sub();
                     break;
-                case WHILECODE:
-                    whilecode();
-                    break;
-                case IFCODE:
-                    ifcode();
+                /*case JUMPTRUE:
+                    jumpTrue();
+                    break;*/
+                case JUMPFALSE:
+                    jumpFalse();
                     break;
             }
         }
     }
 
-    public void add()
-    {
+    public void add() {
         Datum op1, op2;
         op2 = stack.pop();
         op1 = stack.pop();
@@ -173,8 +175,7 @@ public class MaquinaHoc4 {
 
     }
 
-    public void assign()
-    {
+    public void assign() {
         Datum op1, op2;
         op2 = stack.pop();
         op1 = stack.pop();
@@ -183,15 +184,14 @@ public class MaquinaHoc4 {
         stack.push(op1);
     }
 
-    public void bltin()
-    {
+    public void bltin() {
         Datum op1;
         InstrucPrograma instruc;
         instruc = Prog[pc++];
 
-        switch(instruc.Func_BLTIN) {
+        switch (instruc.Func_BLTIN) {
             case ABS:
-                op1= stack.pop();
+                op1 = stack.pop();
                 op1.val = Math.abs(op1.val);
                 stack.push(op1);
                 break;
@@ -212,7 +212,7 @@ public class MaquinaHoc4 {
                 break;
             case EXP:
                 op1 = stack.pop();
-                op1.val =(float) Math.exp((double) op1.val);
+                op1.val = (float) Math.exp((double) op1.val);
                 stack.push(op1);
                 break;
             case INTEGER:
@@ -238,167 +238,180 @@ public class MaquinaHoc4 {
         }
     }
 
-    public void constpush()
-    {
+    public void constpush() {
         Datum op1;
         op1 = new Datum();
         op1.val = Prog[pc++].symbolHoc.val;
         stack.push(op1);
     }
 
-    public void div()
-    {
-        Datum op1,op2;
-        op2 =stack.pop();
-        op1 =stack.pop();
+    public void div() {
+        Datum op1, op2;
+        op2 = stack.pop();
+        op1 = stack.pop();
         op1.val /= op2.val;
         stack.push(op1);
     }
-    public void eval()
-    {
-        Datum op1,op2;
+
+    public void eval() {
+        Datum op1, op2;
         op2 = new Datum();
         op1 = stack.pop();
         op2.val = op1.symb.val;
         stack.push(op2);
     }
 
-    public void mul()
-    {
-        Datum op1,op2;
-        op2 =stack.pop();
-        op1 =stack.pop();
+    public void mul() {
+        Datum op1, op2;
+        op2 = stack.pop();
+        op1 = stack.pop();
         op1.val *= op2.val;
         stack.push(op1);
     }
 
-    public void negate()
-    {
+    public void negate() {
         Datum op1;
-        op1 =stack.pop();
+        op1 = stack.pop();
         op1.val = -op1.val;
         stack.push(op1);
     }
 
-    public void power()
-    {
-        Datum op1,op2;
-        op2 =stack.pop();
-        op1 =stack.pop();
-        op1.val = (float) Math.pow((double) op1.val,(double) op2.val);
+    public void power() {
+        Datum op1, op2;
+        op2 = stack.pop();
+        op1 = stack.pop();
+        op1.val = (float) Math.pow((double) op1.val, (double) op2.val);
         stack.push(op1);
     }
 
-    public void print()
-    {
+    public void print() {
         Datum op1;
         String CadResult = new String();
-        op1 =stack.pop();
+        op1 = stack.pop();
 
-        CadResult = Float.toString(op1.val)+ "\n";
+        CadResult = Float.toString(op1.val) + "\n";
         AreaResult.append(CadResult);
     }
 
-    public void sub()
-    {
-        Datum op1,op2;
-        op2 =stack.pop();
-        op1 =stack.pop();
+    public void sub() {
+        Datum op1, op2;
+        op2 = stack.pop();
+        op1 = stack.pop();
         op1.val -= op2.val;
         stack.push(op1);
     }
 
-    public void varpush()
-    {
+    public void varpush() {
         Datum op1;
         op1 = new Datum();
         op1.symb = Prog[pc++].symbolHoc;
         stack.push(op1);
     }
 
-    public void gt()
-    {
-        Datum op1,op2;
-        op2 =stack.pop();
-        op1 =stack.pop();
-        op1.val = (op1.val > op2.val)?1:0;
-        stack.push(op1);
-    }
-
-    public void ge()
-    {
+    public void gt() {
         Datum op1, op2;
         op2 = stack.pop();
         op1 = stack.pop();
-        op1.val = (op1.val >= op2.val)?1:0;
+        op1.val = (op1.val > op2.val) ? 1 : 0;
         stack.push(op1);
     }
 
-    public void lt()
-    {
+    public void ge() {
         Datum op1, op2;
         op2 = stack.pop();
         op1 = stack.pop();
-        op1.val = (op1.val < op2.val)?1:0;
+        op1.val = (op1.val >= op2.val) ? 1 : 0;
         stack.push(op1);
     }
 
-    public void le()
-    {
+    public void lt() {
         Datum op1, op2;
         op2 = stack.pop();
         op1 = stack.pop();
-        op1.val = (op1.val <= op2.val)?1:0;
+        op1.val = (op1.val < op2.val) ? 1 : 0;
         stack.push(op1);
     }
 
-    public void eq()
-    {
+    public void le() {
         Datum op1, op2;
         op2 = stack.pop();
         op1 = stack.pop();
-        op1.val = (op1.val == op2.val)?1:0;
+        op1.val = (op1.val <= op2.val) ? 1 : 0;
         stack.push(op1);
     }
 
-    public void ne()
-    {
+    public void eq() {
         Datum op1, op2;
         op2 = stack.pop();
         op1 = stack.pop();
-        op1.val = (op1.val != op2.val)?1:0;
+        op1.val = (op1.val == op2.val) ? 1 : 0;
         stack.push(op1);
     }
 
-    public void and()
-    {
+    public void ne() {
         Datum op1, op2;
         op2 = stack.pop();
         op1 = stack.pop();
-        op1.val =op1.val*op2.val;
+        op1.val = (op1.val != op2.val) ? 1 : 0;
         stack.push(op1);
     }
 
-    public void or()
-    {
+    public void and() {
         Datum op1, op2;
         op2 = stack.pop();
         op1 = stack.pop();
-        op1.val = (op1.val==1 || op2.val==1)?1:0;
+        op1.val = op1.val * op2.val;
         stack.push(op1);
     }
 
-    public void not()
-    {
+    public void or() {
+        Datum op1, op2;
+        op2 = stack.pop();
+        op1 = stack.pop();
+        op1.val = (op1.val == 1 || op2.val == 1) ? 1 : 0;
+        stack.push(op1);
+    }
+
+    public void not() {
         Datum op1;
         op1 = stack.pop();
-        op1.val = (op1.val == 1)?1:0;
+        op1.val = (op1.val == 1) ? 1 : 0;
         stack.push(op1);
     }
 
+    public void jumpFalse() {
+        Datum valCond;
+        valCond = stack.pop();
+        int auxPc = pc;
+
+        if (valCond.val == 0.0) {
+            pc = Prog[auxPc].jump;//Condición FALSE, saltar a next_stmt
+        } else {
+            System.out.println("PC es" + pc + "\n");
+            pc = auxPc + 1;//Condición TRUE, ejecuta el stmt
+            System.out.println("PC ahora es " + pc + "\n");
+        }
+    }
+
+    /*public void jumpTrue() {
+        Datum valCond;
+        valCond = stack.pop();
+        int auxPc = pc;
+
+        if (valCond.val != 0.0) {
+            pc = Prog[auxPc].jump;
+        } else {
+            pc = auxPc + 2;
+        }
+    }*/
 
     //Estos tres estan agregados para se tienen que quitar para poner esto en el java cup en jumps
-    public void whilecode(){}
-    public void ifcode(){}
-    public void stop(){}
+    public void whilecode() {
+    }
+
+    public void ifcode() {
+    }
+
+    public void stop() {
+    }
 }
