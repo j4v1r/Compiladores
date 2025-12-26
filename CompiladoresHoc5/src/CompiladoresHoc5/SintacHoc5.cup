@@ -95,17 +95,17 @@ stmt    ::= asgn:ind1 SEMIC                 {:  RESULT = ind1;
                                             :}
 
         |   WHILE cond:ind1 endcondwhile:ind2 stmt:ind3 endwhile:ind4
-                                            {:  /*Fin de while?*/
+                                            {:  /*Fin de while*/
                                                 InstrucPrograma ins1 = new InstrucPrograma();
                                                 ins1.TipInstr = EnumTipoInstr.JUMP;
-                                                ins1.jump = ind4;
+                                                ins1.jump = ind4+1;
                                                 maquinaHoc4.Prog[ind2+1] = ins1;
 
                                                 /*Evalua de nuevo cond para seguir ciclo*/
                                                 InstrucPrograma ins2 = new InstrucPrograma();
                                                 ins2.TipInstr = EnumTipoInstr.JUMP;
                                                 ins2.jump = ind1;
-                                                maquinaHoc4.Prog[ind4-1] = ins2;
+                                                maquinaHoc4.Prog[ind4] = ins2;
 
                                                 RESULT = ind1;
                                             :}
@@ -170,12 +170,16 @@ endcondwhile::=                             {:  int auxProgp;
                                             :}
         ;
 
-endwhile ::=                                {:  InstrucPrograma ins1 = new InstrucPrograma();
+endwhile ::=                                {:  int auxProgp;}
+
+                                                InstrucPrograma ins1 = new InstrucPrograma();
                                                 ins1.TipInstr = EnumTipoInstr.INSTRUC;
                                                 ins1.Instruc = EnumInstrMaq.STOP;
+
+                                                auxProgp = maquinaHoc4.progp;
                                                 maquinaHoc4.code(ins1);
 
-                                                RESULT = maquinaHoc4.progp;
+                                                RESULT = auxProgp;
                                             :}
         ;
 

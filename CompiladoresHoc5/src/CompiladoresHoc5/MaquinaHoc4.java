@@ -5,6 +5,7 @@
 package CompiladoresHoc5;
 
 import static CompiladoresHoc5.EnumInstrMaq.CONSTPUSH;
+import static CompiladoresHoc5.EnumInstrMaq.NOT;
 import java.util.Stack;
 import javax.swing.JTable;
 import javax.swing.JTextArea;
@@ -146,6 +147,12 @@ public class MaquinaHoc4 {
                     break;
                 case NOT:
                     not();
+                    break;
+                case NE:
+                    ne();
+                    break;
+                case EQ:
+                    eq();
                     break;
                 case POWER:
                     power();
