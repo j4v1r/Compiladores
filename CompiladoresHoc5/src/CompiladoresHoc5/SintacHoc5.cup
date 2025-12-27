@@ -39,9 +39,11 @@ terminal SymbolHoc CONST_PRED; /* PI , E, PHI , RAD, etc*/
 terminal SymbolHoc BLTIN; /* sin,cos,atan,etc*/
 terminal MENOSUNARIO;
 terminal OR, AND, GT, GE, LT, LE, EQ, NE, NOT;
+terminal FOR, SWITCH, CASE, DEFAULT, BREAK;
 
 non terminal list;
-non terminal Integer asgn, expr, stmt, stmtlist, if, end, cond, endcondif, endif, endelse, endcondwhile, endwhile; /*Casilla donde empieza su código*/
+non terminal Integer asgn, expr, stmt, stmtlist, if, end, cond, endcondif, endif, endelse, endcondwhile, endwhile;
+non terminal Integer endcondfor, endfor; /*Casilla donde empieza su código*/
 
 precedence nonassoc IF;
 precedence nonassoc ELSE;
