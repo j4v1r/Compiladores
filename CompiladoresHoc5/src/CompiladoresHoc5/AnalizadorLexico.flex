@@ -59,6 +59,10 @@ Digito=[0-9]
 "while"                     {   return symbol(AnalizadorSintacticoSym.WHILE);}
 "else"                      {   return symbol(AnalizadorSintacticoSym.ELSE);}
 "print"                     {   return symbol(AnalizadorSintacticoSym.PRINT);}
+"for"                     {   return symbol(AnalizadorSintacticoSym.FOR);}
+"switch"                     {   return symbol(AnalizadorSintacticoSym.SWITCH);}
+"case"                     {   return symbol(AnalizadorSintacticoSym.CASE);}
+
 
 {Letra}({Letra}|{Digito})*  {   s = ListaSimb.lookup(yytext());
                                 if(s == null) //Se agrega como variable no inicializada
