@@ -169,6 +169,9 @@ public class MaquinaHoc4 {
                 case JUMPFALSE:
                     jumpFalse();
                     break;
+                case EQ_SWITCH:
+                    eq_switch();
+                    break;
             }
         }
     }
@@ -410,13 +413,16 @@ public class MaquinaHoc4 {
         }
     }
 
-    //Estos tres estan agregados para se tienen que quitar para poner esto en el java cup en jumps
-    public void whilecode() {
-    }
+    public void eq_switch() {
+        Datum opCase;
+        Datum opSwitch;
+        Datum res;
 
-    public void ifcode() {
-    }
+        opCase = stack.pop();     // valor del CASE
+        opSwitch = stack.peek();  // valor del SWITCH (NO se saca)
 
-    public void stop() {
+        res = new Datum();
+        res.val = (opSwitch.val == opCase.val) ? 1 : 0;
+        stack.push(res);
     }
 }

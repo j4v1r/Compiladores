@@ -43,7 +43,7 @@ terminal FOR, SWITCH, CASE, DEFAULT, BREAK;
 
 non terminal list;
 non terminal Integer asgn, expr, stmt, stmtlist, if, end, cond, endcondif, endif, endelse, endcondwhile, endwhile;
-non terminal Integer endcondfor, endfor; /*Casilla donde empieza su código*/
+non terminal Integer endcondfor, endfor,endswitch,endcase,cases,case; /*Casilla donde empieza su código*/
 
 precedence nonassoc IF;
 precedence nonassoc ELSE;
@@ -95,6 +95,27 @@ stmt    ::= asgn:ind1 SEMIC                 {:  RESULT = ind1;
                                                 ins1.Instruc = EnumInstrMaq.PRINT;
                                                 
                                                 maquinaHoc4.code(ins1); 
+                                                RESULT = ind1;
+                                            :}
+        |   FOR ParIzq asgn:ind1 SEMIC cond:ind2 endcondfor:ind3 SEMIC asgn:ind4 ParDer stmt:ind5 endfor:ind6
+                                            {:
+                                                /* Salto para regresar a evaluar la condición */
+                                                InstrucPrograma ins1 = new InstrucPrograma();
+                                                ins1.TipInstr = EnumTipoInstr.JUMP; // [cite: 3]
+                                                ins1.jump = ind2;
+                                                maquinaHoc4.Prog[ind6] = ins1;
+
+                                                /* Si la condición es falsa (JUMPFALSE), saltar al final del FOR */
+                                                InstrucPrograma ins2 = new InstrucPrograma();
+                                                ins2.TipInstr = EnumTipoInstr.JUMP; // [cite: 4]
+                                                ins2.jump = maquinaHoc4.progp;
+                                                maquinaHoc4.Prog[ind3 + 1] = ins2;
+
+                                                RESULT = ind1;
+                                            :}
+
+        |   SWITCH ParIzq expr:ind1 ParDer LlaveIzq case LlaveDer
+                                            {:
                                                 RESULT = ind1;
                                             :}
 
@@ -157,6 +178,46 @@ if      ::= IF cond:ind1 endcondif:ind2 stmt:ind3 endif:ind4
                                                RESULT = ind1;
                                             :}
         ;
+cases ::=
+      cases case
+    | case
+;
+case ::=    CASE NUM:n
+                                            {:
+                                                InstrucPrograma ins1 = new InstrucPrograma();
+                                                ins1.TipInstr = EnumTipoInstr.INSTRUC;
+                                                ins1.Instruc = EnumInstrMaq.CONSTPUSH;
+
+                                                InstrucPrograma ins2 = new InstrucPrograma();
+                                                ins2.TipInstr = EnumTipoInstr.SYMBOL;
+                                                ins2.symbolHoc = n;
+
+                                                InstrucPrograma ins3 = new InstrucPrograma();
+                                                ins3.TipInstr = EnumTipoInstr.INSTRUC;
+                                                ins3.Instruc = EnumInstrMaq.EQ_SWITCH;
+
+                                                /* salto si no coincide */
+                                                InstrucPrograma ins4 = new InstrucPrograma();
+                                                ins4.TipInstr = EnumTipoInstr.INSTRUC;
+                                                ins4.Instruc = EnumInstrMaq.JUMPFALSE;
+
+                                                maquinaHoc4.code2(ins1, ins2);
+                                                maquinaHoc4.code2(ins3, ins4);
+                                            :}
+                                            stmt
+                                            BREAK SEMIC
+                                            {:
+                                                /* break → salir del switch */
+                                                InstrucPrograma ins5 = new InstrucPrograma();
+                                                ins5.TipInstr = EnumTipoInstr.JUMP;
+                                                ins5.jump = -1;   // se rellena en endswitch
+                                                maquinaHoc4.code(ins5);
+                                            :}
+;
+case ::=
+    DEFAULT stmt
+;
+
 
 cond    ::= ParIzq expr:ind1 ParDer         {:  RESULT = ind1;
                                             :}
@@ -190,6 +251,34 @@ endwhile ::=                               {:  int auxProgp;
 
                                                RESULT = auxProgp;
                                            :}
+        ;
+endcondfor ::=
+                                            {:
+                                                int auxProgp;
+
+                                                InstrucPrograma ins1 = new InstrucPrograma();
+                                                ins1.TipInstr = EnumTipoInstr.INSTRUC;
+                                                ins1.Instruc = EnumInstrMaq.JUMPFALSE;
+
+                                                InstrucPrograma ins2 = new InstrucPrograma();
+                                                ins2.TipInstr = EnumTipoInstr.JUMP;
+                                                ins2.jump = -1;
+
+                                                auxProgp = maquinaHoc4.progp;
+                                                maquinaHoc4.code2(ins1, ins2);
+
+                                                RESULT = auxProgp;
+                                            :}
+        ;
+endfor ::=
+                                            {:
+                                                RESULT = maquinaHoc4.progp;
+                                            :}
+        ;
+endswitch ::=
+                                            {:
+                                                RESULT = maquinaHoc4.progp;
+                                            :}
         ;
 
 endcondif::=                               {:   int auxProgp;
