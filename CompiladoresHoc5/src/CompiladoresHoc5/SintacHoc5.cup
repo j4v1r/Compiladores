@@ -99,7 +99,6 @@ stmt    ::= asgn:ind1 SEMIC                 {:  RESULT = ind1;
                                             :}
         |   FOR ParIzq asgn:ind1 SEMIC expr:ind2 endcondfor:ind3 SEMIC asgn:ind4 ParDer stmt:ind5 endfor:ind6
                                             {:
-
                                                 /* 1. Al final del cuerpo (ind6), saltar al incremento (ind4) */
                                                 InstrucPrograma ins1 = new InstrucPrograma();
                                                 ins1.TipInstr = EnumTipoInstr.JUMP;
