@@ -97,23 +97,25 @@ stmt    ::= asgn:ind1 SEMIC                 {:  RESULT = ind1;
                                                 maquinaHoc4.code(ins1); 
                                                 RESULT = ind1;
                                             :}
-        |   FOR ParIzq asgn:ind1 SEMIC cond:ind2 endcondfor:ind3 SEMIC asgn:ind4 ParDer stmt:ind5 endfor:ind6
+        |   FOR ParIzq asgn:ind1 SEMIC expr:ind2 endcondfor:ind3 SEMIC asgn:ind4 ParDer stmt:ind5 endfor:ind6
                                             {:
-                                                /* Salto para regresar a evaluar la condición */
+                                                /* 1. Al final del cuerpo (ind6), saltar al incremento (ind4) */
                                                 InstrucPrograma ins1 = new InstrucPrograma();
-                                                ins1.TipInstr = EnumTipoInstr.JUMP; // [cite: 3]
-                                                ins1.jump = ind2;
+                                                ins1.TipInstr = EnumTipoInstr.JUMP;
+                                                ins1.jump = ind4;
                                                 maquinaHoc4.Prog[ind6] = ins1;
 
-                                                /* Si la condición es falsa (JUMPFALSE), saltar al final del FOR */
+                                                /* 2. Después del incremento, saltar a la condición (ind2) */
                                                 InstrucPrograma ins2 = new InstrucPrograma();
-                                                ins2.TipInstr = EnumTipoInstr.JUMP; // [cite: 4]
-                                                ins2.jump = maquinaHoc4.progp;
-                                                maquinaHoc4.Prog[ind3 + 1] = ins2;
+                                                ins2.TipInstr = EnumTipoInstr.JUMP;
+                                                ins2.jump = ind2;
+                                                maquinaHoc4.code(ins2);
+
+                                                /* 3. Si condición es falsa (ind3+1), saltar al final */
+                                                maquinaHoc4.Prog[ind3 + 1].jump = maquinaHoc4.progp;
 
                                                 RESULT = ind1;
                                             :}
-
         |   SWITCH ParIzq expr:ind1 ParDer LlaveIzq case LlaveDer
                                             {:
                                                 RESULT = ind1;
@@ -178,9 +180,8 @@ if      ::= IF cond:ind1 endcondif:ind2 stmt:ind3 endif:ind4
                                                RESULT = ind1;
                                             :}
         ;
-cases ::=
-      cases case
-    | case
+cases ::= cases case    {::}
+    | case  {::}
 ;
 case ::=    CASE NUM:n
                                             {:
@@ -213,9 +214,8 @@ case ::=    CASE NUM:n
                                                 ins5.jump = -1;   // se rellena en endswitch
                                                 maquinaHoc4.code(ins5);
                                             :}
-;
-case ::=
-    DEFAULT stmt
+
+    DEFAULT stmt                        {::}
 ;
 
 
