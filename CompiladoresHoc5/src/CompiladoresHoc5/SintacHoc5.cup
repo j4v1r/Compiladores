@@ -39,11 +39,12 @@ terminal SymbolHoc CONST_PRED; /* PI , E, PHI , RAD, etc*/
 terminal SymbolHoc BLTIN; /* sin,cos,atan,etc*/
 terminal MENOSUNARIO;
 terminal OR, AND, GT, GE, LT, LE, EQ, NE, NOT;
-terminal FOR, SWITCH, CASE, DEFAULT, BREAK;
+terminal FOR, SWITCH, CASE;
+terminal DOSPUNTOS;
 
 non terminal list;
 non terminal Integer asgn, expr, stmt, stmtlist, if, end, cond, endcondif, endif, endelse, endcondwhile, endwhile;
-non terminal Integer endcondfor, endfor,endswitch,endcase,cases,case; /*Casilla donde empieza su código*/
+non terminal Integer endcondfor, endfor,cases,case,endswitch;
 
 precedence nonassoc IF;
 precedence nonassoc ELSE;
@@ -116,10 +117,9 @@ stmt    ::= asgn:ind1 SEMIC                 {:  RESULT = ind1;
 
                                                 RESULT = ind1;
                                             :}
-        |   SWITCH ParIzq expr:ind1 ParDer LlaveIzq case LlaveDer
-                                            {:
-                                                RESULT = ind1;
-                                            :}
+        |  SWITCH ParIzq expr:indSwitch ParDer LlaveIzq cases LlaveDer
+                                            {: RESULT = indSwitch; :}
+
 
         |   WHILE cond:ind1 endcondwhile:ind2 stmt:ind3 endwhile:ind4
                                            {:  /*Fin de while*/
@@ -180,11 +180,13 @@ if      ::= IF cond:ind1 endcondif:ind2 stmt:ind3 endif:ind4
                                                RESULT = ind1;
                                             :}
         ;
-cases ::= cases case    {::}
-    | case  {::}
-;
-case ::=    CASE NUM:n
+cases ::= cases case
+        | case
+        ;
+
+case ::= CASE NUM:n DOSPUNTOS
                                             {:
+                                                /* ins1: push de la constante del case */
                                                 InstrucPrograma ins1 = new InstrucPrograma();
                                                 ins1.TipInstr = EnumTipoInstr.INSTRUC;
                                                 ins1.Instruc = EnumInstrMaq.CONSTPUSH;
@@ -193,31 +195,39 @@ case ::=    CASE NUM:n
                                                 ins2.TipInstr = EnumTipoInstr.SYMBOL;
                                                 ins2.symbolHoc = n;
 
+                                                maquinaHoc4.code2(ins1, ins2);
+
+                                                /* ins3: comparación (==) */
                                                 InstrucPrograma ins3 = new InstrucPrograma();
                                                 ins3.TipInstr = EnumTipoInstr.INSTRUC;
-                                                ins3.Instruc = EnumInstrMaq.EQ_SWITCH;
+                                                ins3.Instruc = EnumInstrMaq.EQ;
+                                                maquinaHoc4.code(ins3);
 
-                                                /* salto si no coincide */
+                                                /* ins4: JUMPFALSE */
                                                 InstrucPrograma ins4 = new InstrucPrograma();
                                                 ins4.TipInstr = EnumTipoInstr.INSTRUC;
                                                 ins4.Instruc = EnumInstrMaq.JUMPFALSE;
 
-                                                maquinaHoc4.code2(ins1, ins2);
-                                                maquinaHoc4.code2(ins3, ins4);
-                                            :}
-                                            stmt
-                                            BREAK SEMIC
-                                            {:
-                                                /* break → salir del switch */
+                                                /* ins5: JUMP (se parchea después) */
                                                 InstrucPrograma ins5 = new InstrucPrograma();
                                                 ins5.TipInstr = EnumTipoInstr.JUMP;
-                                                ins5.jump = -1;   // se rellena en endswitch
-                                                maquinaHoc4.code(ins5);
+                                                ins5.jump = -1;
+
+                                                int posCond = maquinaHoc4.progp;
+                                                maquinaHoc4.code2(ins4, ins5);
+
+                                                RESULT = posCond;
                                             :}
+                                            LlaveIzq stmtlist LlaveDer
+                                            {:
+                                                /* ins6: salto al final del case (tipo endif) */
+                                                InstrucPrograma ins6 = new InstrucPrograma();
+                                                ins6.TipInstr = EnumTipoInstr.JUMP;
+                                                ins6.jump = maquinaHoc4.progp;
 
-    DEFAULT stmt                        {::}
+                                                maquinaHoc4.Prog[RESULT + 1] = ins6;
+                                            :}
 ;
-
 
 cond    ::= ParIzq expr:ind1 ParDer         {:  RESULT = ind1;
                                             :}
@@ -271,11 +281,6 @@ endcondfor ::=
                                             :}
         ;
 endfor ::=
-                                            {:
-                                                RESULT = maquinaHoc4.progp;
-                                            :}
-        ;
-endswitch ::=
                                             {:
                                                 RESULT = maquinaHoc4.progp;
                                             :}

@@ -169,9 +169,6 @@ public class MaquinaHoc4 {
                 case JUMPFALSE:
                     jumpFalse();
                     break;
-                case EQ_SWITCH:
-                    eq_switch();
-                    break;
             }
         }
     }
@@ -413,16 +410,4 @@ public class MaquinaHoc4 {
         }
     }
 
-    public void eq_switch() {
-        Datum opCase;
-        Datum opSwitch;
-        Datum res;
-
-        opCase = stack.pop();     // valor del CASE
-        opSwitch = stack.peek();  // valor del SWITCH (NO se saca)
-
-        res = new Datum();
-        res.val = (opSwitch.val == opCase.val) ? 1 : 0;
-        stack.push(res);
-    }
 }

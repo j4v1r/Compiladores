@@ -32,7 +32,7 @@ Digito=[0-9]
 [ \t\n]+                    {;}
 ";"                         {   return symbol(AnalizadorSintacticoSym.SEMIC);}
 
-{Digito}+(\.{Digito}+)?     {   s = new SymbolHoc("",EnumTipoSymbol.CONST_NUM,new Float(yytext())); //la mitad de esta linea me la invente yo no se si esta bien
+{Digito}+(\.{Digito}+)?     {   s = new SymbolHoc("",EnumTipoSymbol.CONST_NUM,Float.parseFloat(yytext())); //la mitad de esta linea me la invente yo no se si esta bien
                                 return symbol(AnalizadorSintacticoSym.NUM,s);
                             }
 
@@ -53,15 +53,16 @@ Digito=[0-9]
 ")"                         {   return symbol(AnalizadorSintacticoSym.ParDer);}
 "("                         {   return symbol(AnalizadorSintacticoSym.ParIzq);}
 "^"                         {   return symbol(AnalizadorSintacticoSym.OpPotencia);}
+":"                         {   return symbol(AnalizadorSintacticoSym.DOSPUNTOS);}
 "{"                         {   return symbol(AnalizadorSintacticoSym.LlaveIzq);}
 "}"                         {   return symbol(AnalizadorSintacticoSym.LlaveDer);}
 "if"                        {   return symbol(AnalizadorSintacticoSym.IF);}
 "while"                     {   return symbol(AnalizadorSintacticoSym.WHILE);}
 "else"                      {   return symbol(AnalizadorSintacticoSym.ELSE);}
 "print"                     {   return symbol(AnalizadorSintacticoSym.PRINT);}
-"for"                     {   return symbol(AnalizadorSintacticoSym.FOR);}
-"switch"                     {   return symbol(AnalizadorSintacticoSym.SWITCH);}
-"case"                     {   return symbol(AnalizadorSintacticoSym.CASE);}
+"for"                       {   return symbol(AnalizadorSintacticoSym.FOR);}
+"switch"                    {   return symbol(AnalizadorSintacticoSym.SWITCH);}
+"case"                      {   return symbol(AnalizadorSintacticoSym.CASE);}
 
 
 {Letra}({Letra}|{Digito})*  {   s = ListaSimb.lookup(yytext());
